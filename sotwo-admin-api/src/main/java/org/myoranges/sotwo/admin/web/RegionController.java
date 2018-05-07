@@ -3,9 +3,9 @@ package org.myoranges.sotwo.admin.web;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.myoranges.sotwo.admin.annotation.LoginAdmin;
-import org.myoranges.sotwo.db.domain.sotwoRegion;
-import org.myoranges.sotwo.db.service.sotwoRegionService;
 import org.myoranges.sotwo.core.util.ResponseUtil;
+import org.myoranges.sotwo.db.domain.SotwoRegion;
+import org.myoranges.sotwo.db.service.SotwoRegionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +22,7 @@ public class RegionController {
     private final Log logger = LogFactory.getLog(RegionController.class);
 
     @Autowired
-    private sotwoRegionService regionService;
+    private SotwoRegionService regionService;
 
     @GetMapping("/clist")
     public Object clist(@LoginAdmin Integer adminId, Integer id) {
@@ -30,7 +30,7 @@ public class RegionController {
             return ResponseUtil.badArgument();
         }
 
-        List<sotwoRegion> regionList = regionService.queryByPid(id);
+        List<SotwoRegion> regionList = regionService.queryByPid(id);
 
         return ResponseUtil.ok(regionList);
     }
@@ -45,7 +45,7 @@ public class RegionController {
             return ResponseUtil.unlogin();
         }
 
-        List<sotwoRegion> regionList = regionService.querySelective(name, code, page, limit, sort, order);
+        List<SotwoRegion> regionList = regionService.querySelective(name, code, page, limit, sort, order);
         int total = regionService.countSelective(name, code, page, limit, sort, order);
         Map<String, Object> data = new HashMap<>();
         data.put("total", total);

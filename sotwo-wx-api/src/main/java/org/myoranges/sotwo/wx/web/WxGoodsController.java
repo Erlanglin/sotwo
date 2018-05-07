@@ -3,10 +3,10 @@ package org.myoranges.sotwo.wx.web;
 import com.mysql.jdbc.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.myoranges.sotwo.core.util.ResponseUtil;
 import org.myoranges.sotwo.db.domain.*;
 import org.myoranges.sotwo.db.service.*;
 import org.myoranges.sotwo.db.util.SortUtil;
-import org.myoranges.sotwo.core.util.ResponseUtil;
 import org.myoranges.sotwo.wx.annotation.LoginUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,33 +26,33 @@ public class WxGoodsController {
     private final Log logger = LogFactory.getLog(WxGoodsController.class);
 
     @Autowired
-    private sotwoGoodsService goodsService;
+    private SotwoGoodsService goodsService;
     @Autowired
-    private sotwoProductService productService;
+    private SotwoProductService productService;
     @Autowired
-    private sotwoIssueService goodsIssueService;
+    private SotwoIssueService goodsIssueService;
     @Autowired
-    private sotwoGoodsAttributeService goodsAttributeService;
+    private SotwoGoodsAttributeService goodsAttributeService;
     @Autowired
-    private sotwoBrandService brandService;
+    private SotwoBrandService brandService;
     @Autowired
-    private sotwoCommentService commentService;
+    private SotwoCommentService commentService;
     @Autowired
-    private sotwoUserService userService;
+    private SotwoUserService userService;
     @Autowired
-    private sotwoCollectService collectService;
+    private SotwoCollectService collectService;
     @Autowired
-    private sotwoFootprintService footprintService;
+    private SotwoFootprintService footprintService;
     @Autowired
-    private sotwoCategoryService categoryService;
+    private SotwoCategoryService categoryService;
     @Autowired
-    private sotwoSearchHistoryService searchHistoryService;
+    private SotwoSearchHistoryService searchHistoryService;
     @Autowired
-    private sotwoCouponService apiCouponService;
+    private SotwoCouponService apiCouponService;
     @Autowired
-    private sotwoCartService cartService;
+    private SotwoCartService cartService;
     @Autowired
-    private sotwoGoodsSpecificationService goodsSpecificationService;
+    private SotwoGoodsSpecificationService goodsSpecificationService;
 
     /**
      * 商品详情
@@ -88,34 +88,34 @@ public class WxGoodsController {
         }
 
         // 商品信息
-        sotwoGoods info = goodsService.findById(id);
+        SotwoGoods info = goodsService.findById(id);
 
         // 商品属性
-        List<sotwoGoodsAttribute> goodsAttributeList = goodsAttributeService.queryByGid(id);
+        List<SotwoGoodsAttribute> goodsAttributeList = goodsAttributeService.queryByGid(id);
 
         // 商品规格
         // 返回的是定制的GoodsSpecificationVo
         Object specificationList = goodsSpecificationService.getSpecificationVoList(id);
 
         // 商品规格对应的数量和价格
-        List<sotwoProduct> productList = productService.queryByGid(id);
+        List<SotwoProduct> productList = productService.queryByGid(id);
 
         // 商品问题，这里是一些通用问题
-        List<sotwoIssue> issue = goodsIssueService.query();
+        List<SotwoIssue> issue = goodsIssueService.query();
 
         // 商品品牌商
-        sotwoBrand brand = brandService.findById(info.getBrandId());
+        SotwoBrand brand = brandService.findById(info.getBrandId());
 
         // 评论
-        List<sotwoComment> comments = commentService.queryGoodsByGid(id, 0, 2);
+        List<SotwoComment> comments = commentService.queryGoodsByGid(id, 0, 2);
         List<Map<String, Object>> commentsVo = new ArrayList<>(comments.size());
         int commentCount = commentService.countGoodsByGid(id, 0, 2);
-        for(sotwoComment comment : comments){
+        for(SotwoComment comment : comments){
             Map<String, Object> c = new HashMap<>();
             c.put("id", comment.getId());
             c.put("addTime", comment.getAddTime());
             c.put("content", comment.getContent());
-            sotwoUser user = userService.findById(comment.getUserId());
+            SotwoUser user = userService.findById(comment.getUserId());
             c.put("nickname", user.getNickname());
             c.put("avatar", user.getAvatar());
             c.put("picList", comment.getPicUrls());
@@ -133,7 +133,7 @@ public class WxGoodsController {
 
         // 记录用户的足迹
         if(userId != null) {
-            sotwoFootprint footprint = new sotwoFootprint();
+            SotwoFootprint footprint = new SotwoFootprint();
             footprint.setAddTime(LocalDateTime.now());
             footprint.setUserId(userId);
             footprint.setGoodsId(id);
@@ -178,9 +178,9 @@ public class WxGoodsController {
         if(id == null){
             return ResponseUtil.badArgument();
         }
-        sotwoCategory cur = categoryService.findById(id);
-        sotwoCategory parent = null;
-        List<sotwoCategory> children = null;
+        SotwoCategory cur = categoryService.findById(id);
+        SotwoCategory parent = null;
+        List<SotwoCategory> children = null;
 
         if(cur.getParentId() == 0){
             parent = cur;
@@ -239,7 +239,7 @@ public class WxGoodsController {
 
         //添加到搜索历史
         if (userId != null && !StringUtils.isNullOrEmpty(keyword)) {
-            sotwoSearchHistory searchHistoryVo = new sotwoSearchHistory();
+            SotwoSearchHistory searchHistoryVo = new SotwoSearchHistory();
             searchHistoryVo.setAddTime(LocalDateTime.now());
             searchHistoryVo.setKeyword(keyword);
             searchHistoryVo.setUserId(userId);
@@ -248,12 +248,12 @@ public class WxGoodsController {
         }
 
         //查询列表数据
-        List<sotwoGoods> goodsList = goodsService.querySelective(categoryId, brandId, keyword, isHot, isNew, page, size, sortWithOrder);
+        List<SotwoGoods> goodsList = goodsService.querySelective(categoryId, brandId, keyword, isHot, isNew, page, size, sortWithOrder);
         int total = goodsService.countSelective(categoryId, brandId, keyword, isHot, isNew, page, size, sortWithOrder);
 
         // 查询商品所属类目列表。
         List<Integer> goodsCatIds = goodsService.getCatIds(brandId, keyword, isHot, isNew);
-        List<sotwoCategory> categoryList = null;
+        List<SotwoCategory> categoryList = null;
         if(goodsCatIds.size() != 0) {
             categoryList = categoryService.queryL2ByIds(goodsCatIds);
         }
@@ -343,7 +343,7 @@ public class WxGoodsController {
             return ResponseUtil.badArgument();
         }
 
-        sotwoGoods goods = goodsService.findById(id);
+        SotwoGoods goods = goodsService.findById(id);
         if(goods == null){
             return ResponseUtil.badArgumentValue();
         }
@@ -353,7 +353,7 @@ public class WxGoodsController {
 
         // 查找六个相关商品
         int related = 6;
-        List<sotwoGoods> goodsList = goodsService.queryByCategory(cid, 0, related);
+        List<SotwoGoods> goodsList = goodsService.queryByCategory(cid, 0, related);
         Map<String, Object> data = new HashMap<>();
         data.put("goodsList", goodsList);
         return ResponseUtil.ok(data);

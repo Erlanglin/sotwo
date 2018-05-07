@@ -3,9 +3,9 @@ package org.myoranges.sotwo.admin.web;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.myoranges.sotwo.admin.annotation.LoginAdmin;
-import org.myoranges.sotwo.db.domain.sotwoCategory;
-import org.myoranges.sotwo.db.service.sotwoCategoryService;
 import org.myoranges.sotwo.core.util.ResponseUtil;
+import org.myoranges.sotwo.db.domain.SotwoCategory;
+import org.myoranges.sotwo.db.service.SotwoCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +19,7 @@ public class CategoryController {
     private final Log logger = LogFactory.getLog(CategoryController.class);
 
     @Autowired
-    private sotwoCategoryService categoryService;
+    private SotwoCategoryService categoryService;
 
     @GetMapping("/list")
     public Object list(@LoginAdmin Integer adminId,
@@ -31,7 +31,7 @@ public class CategoryController {
             return ResponseUtil.unlogin();
         }
 
-        List<sotwoCategory> collectList = categoryService.querySelective(id, name, page, limit, sort, order);
+        List<SotwoCategory> collectList = categoryService.querySelective(id, name, page, limit, sort, order);
         int total = categoryService.countSelective(id, name, page, limit, sort, order);
         Map<String, Object> data = new HashMap<>();
         data.put("total", total);
@@ -41,7 +41,7 @@ public class CategoryController {
     }
 
     @PostMapping("/create")
-    public Object create(@LoginAdmin Integer adminId, @RequestBody sotwoCategory category){
+    public Object create(@LoginAdmin Integer adminId, @RequestBody SotwoCategory category){
         if(adminId == null){
             return ResponseUtil.unlogin();
         }
@@ -59,12 +59,12 @@ public class CategoryController {
             return ResponseUtil.badArgument();
         }
 
-        sotwoCategory category = categoryService.findById(id);
+        SotwoCategory category = categoryService.findById(id);
         return ResponseUtil.ok(category);
     }
 
     @PostMapping("/update")
-    public Object update(@LoginAdmin Integer adminId, @RequestBody sotwoCategory category){
+    public Object update(@LoginAdmin Integer adminId, @RequestBody SotwoCategory category){
         if(adminId == null){
             return ResponseUtil.unlogin();
         }
@@ -73,7 +73,7 @@ public class CategoryController {
     }
 
     @PostMapping("/delete")
-    public Object delete(@LoginAdmin Integer adminId, @RequestBody sotwoCategory category){
+    public Object delete(@LoginAdmin Integer adminId, @RequestBody SotwoCategory category){
         if(adminId == null){
             return ResponseUtil.unlogin();
         }
@@ -88,9 +88,9 @@ public class CategoryController {
         }
 
         // 所有一级分类目录
-        List<sotwoCategory> l1CatList = categoryService.queryL1();
+        List<SotwoCategory> l1CatList = categoryService.queryL1();
         HashMap<Integer, String> data = new HashMap<>(l1CatList.size());
-        for(sotwoCategory category : l1CatList){
+        for(SotwoCategory category : l1CatList){
             data.put(category.getId(), category.getName());
         }
         return ResponseUtil.ok(data);

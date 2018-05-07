@@ -1,9 +1,10 @@
 package org.myoranges.sotwo.db.service;
 
 import com.github.pagehelper.PageHelper;
+
 import org.myoranges.sotwo.db.dao.SotwoCategoryMapper;
-import org.myoranges.sotwo.db.domain.sotwoCategory;
-import org.myoranges.sotwo.db.domain.sotwoCategoryExample;
+import org.myoranges.sotwo.db.domain.SotwoCategory;
+import org.myoranges.sotwo.db.domain.SotwoCategoryExample;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -11,49 +12,49 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @Service
-public class sotwoCategoryService {
+public class SotwoCategoryService {
     @Resource
     private SotwoCategoryMapper categoryMapper;
 
-    public List<sotwoCategory> queryL1WithoutRecommend(int offset, int limit) {
-        sotwoCategoryExample example = new sotwoCategoryExample();
+    public List<SotwoCategory> queryL1WithoutRecommend(int offset, int limit) {
+        SotwoCategoryExample example = new SotwoCategoryExample();
         example.or().andLevelEqualTo("L1").andNameNotEqualTo("推荐").andDeletedEqualTo(false);
         PageHelper.startPage(offset, limit);
         return categoryMapper.selectByExample(example);
     }
 
-    public List<sotwoCategory> queryL1(int offset, int limit) {
-        sotwoCategoryExample example = new sotwoCategoryExample();
+    public List<SotwoCategory> queryL1(int offset, int limit) {
+        SotwoCategoryExample example = new SotwoCategoryExample();
         example.or().andLevelEqualTo("L1").andDeletedEqualTo(false);
         PageHelper.startPage(offset, limit);
         return categoryMapper.selectByExample(example);
     }
 
-    public List<sotwoCategory> queryL1() {
-        sotwoCategoryExample example = new sotwoCategoryExample();
+    public List<SotwoCategory> queryL1() {
+        SotwoCategoryExample example = new SotwoCategoryExample();
         example.or().andLevelEqualTo("L1").andDeletedEqualTo(false);
         return categoryMapper.selectByExample(example);
     }
 
-    public List<sotwoCategory> queryByPid(Integer pid) {
-        sotwoCategoryExample example = new sotwoCategoryExample();
+    public List<SotwoCategory> queryByPid(Integer pid) {
+        SotwoCategoryExample example = new SotwoCategoryExample();
         example.or().andParentIdEqualTo(pid).andDeletedEqualTo(false);
         return categoryMapper.selectByExample(example);
     }
 
-    public List<sotwoCategory> queryL2ByIds(List<Integer> ids) {
-        sotwoCategoryExample example = new sotwoCategoryExample();
+    public List<SotwoCategory> queryL2ByIds(List<Integer> ids) {
+        SotwoCategoryExample example = new SotwoCategoryExample();
         example.or().andIdIn(ids).andLevelEqualTo("L2").andDeletedEqualTo(false);
         return categoryMapper.selectByExample(example);
     }
 
-    public sotwoCategory findById(Integer id) {
+    public SotwoCategory findById(Integer id) {
         return categoryMapper.selectByPrimaryKey(id);
     }
 
-    public List<sotwoCategory> querySelective(String id, String name, Integer page, Integer size, String sort, String order) {
-        sotwoCategoryExample example = new sotwoCategoryExample();
-        sotwoCategoryExample.Criteria criteria = example.createCriteria();
+    public List<SotwoCategory> querySelective(String id, String name, Integer page, Integer size, String sort, String order) {
+        SotwoCategoryExample example = new SotwoCategoryExample();
+        SotwoCategoryExample.Criteria criteria = example.createCriteria();
 
         if(!StringUtils.isEmpty(id)){
             criteria.andIdEqualTo(Integer.valueOf(id));
@@ -68,8 +69,8 @@ public class sotwoCategoryService {
     }
 
     public int countSelective(String id, String name, Integer page, Integer size, String sort, String order) {
-        sotwoCategoryExample example = new sotwoCategoryExample();
-        sotwoCategoryExample.Criteria criteria = example.createCriteria();
+        SotwoCategoryExample example = new SotwoCategoryExample();
+        SotwoCategoryExample.Criteria criteria = example.createCriteria();
 
         if(!StringUtils.isEmpty(id)){
             criteria.andIdEqualTo(Integer.valueOf(id));
@@ -82,12 +83,12 @@ public class sotwoCategoryService {
         return (int)categoryMapper.countByExample(example);
     }
 
-    public void updateById(sotwoCategory category) {
+    public void updateById(SotwoCategory category) {
         categoryMapper.updateByPrimaryKeySelective(category);
     }
 
     public void deleteById(Integer id) {
-        sotwoCategory category = categoryMapper.selectByPrimaryKey(id);
+        SotwoCategory category = categoryMapper.selectByPrimaryKey(id);
         if(category == null){
             return;
         }
@@ -95,13 +96,13 @@ public class sotwoCategoryService {
         categoryMapper.updateByPrimaryKey(category);
     }
 
-    public void add(sotwoCategory category) {
+    public void add(SotwoCategory category) {
         categoryMapper.insertSelective(category);
     }
 
-    private sotwoCategory.Column[] CHANNEL = {sotwoCategory.Column.id, sotwoCategory.Column.name, sotwoCategory.Column.iconUrl};
-    public List<sotwoCategory> queryChannel() {
-        sotwoCategoryExample example = new sotwoCategoryExample();
+    private SotwoCategory.Column[] CHANNEL = {SotwoCategory.Column.id, SotwoCategory.Column.name, SotwoCategory.Column.iconUrl};
+    public List<SotwoCategory> queryChannel() {
+        SotwoCategoryExample example = new SotwoCategoryExample();
         example.or().andLevelEqualTo("L1").andDeletedEqualTo(false);
         return categoryMapper.selectByExampleSelective(example, CHANNEL);
     }

@@ -3,12 +3,12 @@ package org.myoranges.sotwo.admin.web;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.myoranges.sotwo.admin.annotation.LoginAdmin;
-import org.myoranges.sotwo.db.domain.sotwoCart;
-import org.myoranges.sotwo.db.service.sotwoCartService;
-import org.myoranges.sotwo.db.service.sotwoGoodsService;
-import org.myoranges.sotwo.db.service.sotwoProductService;
-import org.myoranges.sotwo.db.service.sotwoUserService;
 import org.myoranges.sotwo.core.util.ResponseUtil;
+import org.myoranges.sotwo.db.domain.SotwoCart;
+import org.myoranges.sotwo.db.service.SotwoCartService;
+import org.myoranges.sotwo.db.service.SotwoGoodsService;
+import org.myoranges.sotwo.db.service.SotwoProductService;
+import org.myoranges.sotwo.db.service.SotwoUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,13 +22,13 @@ public class CartController {
     private final Log logger = LogFactory.getLog(CartController.class);
 
     @Autowired
-    private sotwoCartService cartService;
+    private SotwoCartService cartService;
     @Autowired
-    private sotwoUserService userService;
+    private SotwoUserService userService;
     @Autowired
-    private sotwoGoodsService goodsService;
+    private SotwoGoodsService goodsService;
     @Autowired
-    private sotwoProductService productService;
+    private SotwoProductService productService;
 
     @GetMapping("/list")
     public Object list(@LoginAdmin Integer adminId,
@@ -39,7 +39,7 @@ public class CartController {
         if(adminId == null){
             return ResponseUtil.fail401();
         }
-        List<sotwoCart> cartList = cartService.querySelective(userId, goodsId, page, limit, sort, order);
+        List<SotwoCart> cartList = cartService.querySelective(userId, goodsId, page, limit, sort, order);
         int total = cartService.countSelective(userId, goodsId, page, limit, sort, order);
 
         Map<String, Object> data = new HashMap<>();
@@ -53,7 +53,7 @@ public class CartController {
      * 目前的逻辑不支持管理员创建
      */
     @PostMapping("/create")
-    public Object create(@LoginAdmin Integer adminId, @RequestBody sotwoCart cart){
+    public Object create(@LoginAdmin Integer adminId, @RequestBody SotwoCart cart){
         if(adminId == null){
             return ResponseUtil.fail401();
         }
@@ -67,7 +67,7 @@ public class CartController {
             return ResponseUtil.fail401();
         }
 
-        sotwoCart cart = cartService.findById(id);
+        SotwoCart cart = cartService.findById(id);
         return ResponseUtil.ok(cart);
     }
 
@@ -75,7 +75,7 @@ public class CartController {
      * 目前的逻辑不支持管理员创建
      */
     @PostMapping("/update")
-    public Object update(@LoginAdmin Integer adminId, @RequestBody sotwoCart cart){
+    public Object update(@LoginAdmin Integer adminId, @RequestBody SotwoCart cart){
         if(adminId == null){
             return ResponseUtil.fail401();
         }
@@ -83,7 +83,7 @@ public class CartController {
     }
 
     @PostMapping("/delete")
-    public Object delete(@LoginAdmin Integer adminId, @RequestBody sotwoCart cart){
+    public Object delete(@LoginAdmin Integer adminId, @RequestBody SotwoCart cart){
         if(adminId == null){
             return ResponseUtil.fail401();
         }

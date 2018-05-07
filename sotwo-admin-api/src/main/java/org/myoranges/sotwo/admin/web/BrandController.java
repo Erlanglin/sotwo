@@ -3,9 +3,9 @@ package org.myoranges.sotwo.admin.web;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.myoranges.sotwo.admin.annotation.LoginAdmin;
-import org.myoranges.sotwo.db.domain.sotwoBrand;
-import org.myoranges.sotwo.db.service.sotwoBrandService;
 import org.myoranges.sotwo.core.util.ResponseUtil;
+import org.myoranges.sotwo.db.domain.SotwoBrand;
+import org.myoranges.sotwo.db.service.SotwoBrandService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +19,7 @@ public class BrandController {
     private final Log logger = LogFactory.getLog(BrandController.class);
 
     @Autowired
-    private sotwoBrandService brandService;
+    private SotwoBrandService brandService;
 
     @GetMapping("/list")
     public Object list(@LoginAdmin Integer adminId,
@@ -31,7 +31,7 @@ public class BrandController {
             return ResponseUtil.unlogin();
         }
 
-        List<sotwoBrand> brandList = brandService.querySelective(id, name, page, limit, sort, order);
+        List<SotwoBrand> brandList = brandService.querySelective(id, name, page, limit, sort, order);
         int total = brandService.countSelective(id, name, page, limit, sort, order);
         Map<String, Object> data = new HashMap<>();
         data.put("total", total);
@@ -41,7 +41,7 @@ public class BrandController {
     }
 
     @PostMapping("/create")
-    public Object create(@LoginAdmin Integer adminId, @RequestBody sotwoBrand brand){
+    public Object create(@LoginAdmin Integer adminId, @RequestBody SotwoBrand brand){
         if(adminId == null){
             return ResponseUtil.unlogin();
         }
@@ -59,12 +59,12 @@ public class BrandController {
             return ResponseUtil.badArgument();
         }
 
-        sotwoBrand brand = brandService.findById(id);
+        SotwoBrand brand = brandService.findById(id);
         return ResponseUtil.ok(brand);
     }
 
     @PostMapping("/update")
-    public Object update(@LoginAdmin Integer adminId, @RequestBody sotwoBrand brand){
+    public Object update(@LoginAdmin Integer adminId, @RequestBody SotwoBrand brand){
         if(adminId == null){
             return ResponseUtil.unlogin();
         }
@@ -73,7 +73,7 @@ public class BrandController {
     }
 
     @PostMapping("/delete")
-    public Object delete(@LoginAdmin Integer adminId, @RequestBody sotwoBrand brand){
+    public Object delete(@LoginAdmin Integer adminId, @RequestBody SotwoBrand brand){
         if(adminId == null){
             return ResponseUtil.unlogin();
         }

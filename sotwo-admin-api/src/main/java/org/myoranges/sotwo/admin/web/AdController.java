@@ -3,9 +3,9 @@ package org.myoranges.sotwo.admin.web;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.myoranges.sotwo.admin.annotation.LoginAdmin;
-import org.myoranges.sotwo.db.domain.sotwoAd;
-import org.myoranges.sotwo.db.service.sotwoAdService;
 import org.myoranges.sotwo.core.util.ResponseUtil;
+import org.myoranges.sotwo.db.domain.SotwoAd;
+import org.myoranges.sotwo.db.service.SotwoAdService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +19,7 @@ public class AdController {
     private final Log logger = LogFactory.getLog(AdController.class);
 
     @Autowired
-    private sotwoAdService adService;
+    private SotwoAdService adService;
 
     @GetMapping("/list")
     public Object list(@LoginAdmin Integer adminId,
@@ -31,7 +31,7 @@ public class AdController {
             return ResponseUtil.unlogin();
         }
 
-        List<sotwoAd> adList = adService.querySelective(name, content, page, limit, sort, order);
+        List<SotwoAd> adList = adService.querySelective(name, content, page, limit, sort, order);
         int total = adService.countSelective(name, content, page, limit, sort, order);
         Map<String, Object> data = new HashMap<>();
         data.put("total", total);
@@ -41,7 +41,7 @@ public class AdController {
     }
 
     @PostMapping("/create")
-    public Object create(@LoginAdmin Integer adminId, @RequestBody sotwoAd ad){
+    public Object create(@LoginAdmin Integer adminId, @RequestBody SotwoAd ad){
         if(adminId == null){
             return ResponseUtil.unlogin();
         }
@@ -59,12 +59,12 @@ public class AdController {
             return ResponseUtil.badArgument();
         }
 
-        sotwoAd brand = adService.findById(id);
+        SotwoAd brand = adService.findById(id);
         return ResponseUtil.ok(brand);
     }
 
     @PostMapping("/update")
-    public Object update(@LoginAdmin Integer adminId, @RequestBody sotwoAd ad){
+    public Object update(@LoginAdmin Integer adminId, @RequestBody SotwoAd ad){
         if(adminId == null){
             return ResponseUtil.unlogin();
         }
@@ -73,7 +73,7 @@ public class AdController {
     }
 
     @PostMapping("/delete")
-    public Object delete(@LoginAdmin Integer adminId, @RequestBody sotwoAd ad){
+    public Object delete(@LoginAdmin Integer adminId, @RequestBody SotwoAd ad){
         if(adminId == null){
             return ResponseUtil.unlogin();
         }

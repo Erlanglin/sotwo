@@ -2,9 +2,8 @@ package org.myoranges.sotwo.db.service;
 
 import com.github.pagehelper.PageHelper;
 import org.myoranges.sotwo.db.dao.SotwoOrderMapper;
-import org.myoranges.sotwo.db.domain.sotwoOrder;
-import org.myoranges.sotwo.db.domain.sotwoOrderExample;
-import org.myoranges.sotwo.db.util.OrderUtil;
+import org.myoranges.sotwo.db.domain.SotwoOrder;
+import org.myoranges.sotwo.db.domain.SotwoOrderExample;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -15,27 +14,27 @@ import java.util.List;
 import java.util.Random;
 
 @Service
-public class sotwoOrderService {
+public class SotwoOrderService {
     @Resource
     private SotwoOrderMapper orderMapper;
 
-    public int add(sotwoOrder order) {
+    public int add(SotwoOrder order) {
         return orderMapper.insertSelective(order);
     }
 
-    public List<sotwoOrder> query(Integer userId) {
-        sotwoOrderExample example = new sotwoOrderExample();
+    public List<SotwoOrder> query(Integer userId) {
+        SotwoOrderExample example = new SotwoOrderExample();
         example.or().andUserIdEqualTo(userId).andDeletedEqualTo(false);
         return orderMapper.selectByExample(example);
     }
 
     public int count(Integer userId) {
-        sotwoOrderExample example = new sotwoOrderExample();
+        SotwoOrderExample example = new SotwoOrderExample();
         example.or().andUserIdEqualTo(userId).andDeletedEqualTo(false);
         return (int)orderMapper.countByExample(example);
     }
 
-    public sotwoOrder findById(Integer orderId) {
+    public SotwoOrder findById(Integer orderId) {
         return orderMapper.selectByPrimaryKey(orderId);
     }
 
@@ -50,14 +49,14 @@ public class sotwoOrderService {
         return sb.toString();
     }
 
-    public sotwoOrder queryByOrderSn(Integer userId, String orderSn){
-        sotwoOrderExample example = new sotwoOrderExample();
+    public SotwoOrder queryByOrderSn(Integer userId, String orderSn){
+        SotwoOrderExample example = new SotwoOrderExample();
         example.or().andUserIdEqualTo(userId).andOrderSnEqualTo(orderSn).andDeletedEqualTo(false);
         return orderMapper.selectOneByExample(example);
     }
 
     public int countByOrderSn(Integer userId, String orderSn){
-        sotwoOrderExample example = new sotwoOrderExample();
+        SotwoOrderExample example = new SotwoOrderExample();
         example.or().andUserIdEqualTo(userId).andOrderSnEqualTo(orderSn).andDeletedEqualTo(false);
         return (int)orderMapper.countByExample(example);
     }
@@ -73,10 +72,10 @@ public class sotwoOrderService {
         return orderSn;
     }
 
-    public List<sotwoOrder> queryByOrderStatus(Integer userId, List<Short> orderStatus) {
-        sotwoOrderExample example = new sotwoOrderExample();
-        example.orderBy(sotwoOrder.Column.addTime.desc());
-        sotwoOrderExample.Criteria criteria = example.or();
+    public List<SotwoOrder> queryByOrderStatus(Integer userId, List<Short> orderStatus) {
+        SotwoOrderExample example = new SotwoOrderExample();
+        example.orderBy(SotwoOrder.Column.addTime.desc());
+        SotwoOrderExample.Criteria criteria = example.or();
         criteria.andUserIdEqualTo(userId);
         if(orderStatus != null) {
             criteria.andOrderStatusIn(orderStatus);
@@ -86,8 +85,8 @@ public class sotwoOrderService {
     }
 
     public int countByOrderStatus(Integer userId, List<Short> orderStatus) {
-        sotwoOrderExample example = new sotwoOrderExample();
-        sotwoOrderExample.Criteria criteria = example.or();
+        SotwoOrderExample example = new SotwoOrderExample();
+        SotwoOrderExample.Criteria criteria = example.or();
         criteria.andUserIdEqualTo(userId);
         if(orderStatus != null) {
             criteria.andOrderStatusIn(orderStatus);
@@ -96,13 +95,13 @@ public class sotwoOrderService {
         return (int)orderMapper.countByExample(example);
     }
 
-    public int update(sotwoOrder order) {
+    public int update(SotwoOrder order) {
         return orderMapper.updateByPrimaryKeySelective(order);
     }
 
-    public List<sotwoOrder> querySelective(Integer userId, String orderSn, Integer page, Integer size, String sort, String order) {
-        sotwoOrderExample example = new sotwoOrderExample();
-        sotwoOrderExample.Criteria criteria = example.createCriteria();
+    public List<SotwoOrder> querySelective(Integer userId, String orderSn, Integer page, Integer size, String sort, String order) {
+        SotwoOrderExample example = new SotwoOrderExample();
+        SotwoOrderExample.Criteria criteria = example.createCriteria();
 
         if(userId != null){
             criteria.andUserIdEqualTo(userId);
@@ -117,8 +116,8 @@ public class sotwoOrderService {
     }
 
     public int countSelective(Integer userId, String orderSn, Integer page, Integer size, String sort, String order) {
-        sotwoOrderExample example = new sotwoOrderExample();
-        sotwoOrderExample.Criteria criteria = example.createCriteria();
+        SotwoOrderExample example = new SotwoOrderExample();
+        SotwoOrderExample.Criteria criteria = example.createCriteria();
 
         if(userId != null){
             criteria.andUserIdEqualTo(userId);
@@ -131,12 +130,12 @@ public class sotwoOrderService {
         return (int)orderMapper.countByExample(example);
     }
 
-    public void updateById(sotwoOrder order) {
+    public void updateById(SotwoOrder order) {
         orderMapper.updateByPrimaryKeySelective(order);
     }
 
     public void deleteById(Integer id) {
-        sotwoOrder order = orderMapper.selectByPrimaryKey(id);
+        SotwoOrder order = orderMapper.selectByPrimaryKey(id);
         if(order == null){
             return;
         }
@@ -145,25 +144,25 @@ public class sotwoOrderService {
     }
 
     public int count() {
-        sotwoOrderExample example = new sotwoOrderExample();
+        SotwoOrderExample example = new SotwoOrderExample();
         example.or().andDeletedEqualTo(false);
         return (int)orderMapper.countByExample(example);
     }
 
-    public List<sotwoOrder> queryUnpaid() {
-        sotwoOrderExample example = new sotwoOrderExample();
-        example.or().andOrderStatusEqualTo(OrderUtil.STATUS_CREATE).andDeletedEqualTo(false);
+    public List<SotwoOrder> queryUnpaid() {
+        SotwoOrderExample example = new SotwoOrderExample();
+        example.or().andOrderStatusEqualTo(org.myoranges.sotwo.db.util.OrderUtil.STATUS_CREATE).andDeletedEqualTo(false);
         return orderMapper.selectByExample(example);
     }
 
-    public List<sotwoOrder> queryUnconfirm() {
-        sotwoOrderExample example = new sotwoOrderExample();
-        example.or().andOrderStatusEqualTo(OrderUtil.STATUS_SHIP).andShipEndTimeIsNotNull().andDeletedEqualTo(false);
+    public List<SotwoOrder> queryUnconfirm() {
+        SotwoOrderExample example = new SotwoOrderExample();
+        example.or().andOrderStatusEqualTo(org.myoranges.sotwo.db.util.OrderUtil.STATUS_SHIP).andShipEndTimeIsNotNull().andDeletedEqualTo(false);
         return orderMapper.selectByExample(example);
     }
 
-    public sotwoOrder findBySn(String orderSn) {
-        sotwoOrderExample example = new sotwoOrderExample();
+    public SotwoOrder findBySn(String orderSn) {
+        SotwoOrderExample example = new SotwoOrderExample();
         example.or().andOrderSnEqualTo(orderSn).andDeletedEqualTo(false);
         return orderMapper.selectOneByExample(example);
     }

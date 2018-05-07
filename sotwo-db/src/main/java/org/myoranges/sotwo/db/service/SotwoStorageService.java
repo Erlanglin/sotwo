@@ -2,8 +2,8 @@ package org.myoranges.sotwo.db.service;
 
 import com.github.pagehelper.PageHelper;
 import org.myoranges.sotwo.db.dao.SotwoStorageMapper;
-import org.myoranges.sotwo.db.domain.sotwoStorage;
-import org.myoranges.sotwo.db.domain.sotwoStorageExample;
+import org.myoranges.sotwo.db.domain.SotwoStorage;
+import org.myoranges.sotwo.db.domain.SotwoStorageExample;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -11,46 +11,46 @@ import org.springframework.util.StringUtils;
 import java.util.List;
 
 @Service
-public class sotwoStorageService {
+public class SotwoStorageService {
     @Autowired
     private SotwoStorageMapper storageMapper;
 
     public void deleteByKey(String key) {
-        sotwoStorageExample example = new sotwoStorageExample();
+        SotwoStorageExample example = new SotwoStorageExample();
         example.or().andKeyEqualTo(key);
-        sotwoStorage storage = new sotwoStorage();
+        SotwoStorage storage = new SotwoStorage();
         storage.setDeleted(true);
         storageMapper.updateByExampleSelective(storage, example);
     }
 
-    public void add(sotwoStorage storageInfo) {
+    public void add(SotwoStorage storageInfo) {
         storageMapper.insertSelective(storageInfo);
     }
 
-    public sotwoStorage findByName(String filename) {
-        sotwoStorageExample example = new sotwoStorageExample();
+    public SotwoStorage findByName(String filename) {
+        SotwoStorageExample example = new SotwoStorageExample();
         example.or().andNameEqualTo(filename).andDeletedEqualTo(false);
         return storageMapper.selectOneByExample(example);
     }
 
-    public sotwoStorage findByKey(String key) {
-        sotwoStorageExample example = new sotwoStorageExample();
+    public SotwoStorage findByKey(String key) {
+        SotwoStorageExample example = new SotwoStorageExample();
         example.or().andKeyEqualTo(key).andDeletedEqualTo(false);
         return storageMapper.selectOneByExample(example);
     }
 
-    public void update(sotwoStorage storageInfo) {
+    public void update(SotwoStorage storageInfo) {
         storageMapper.updateByPrimaryKeySelective(storageInfo);
     }
 
 
-    public sotwoStorage findById(Integer id) {
+    public SotwoStorage findById(Integer id) {
         return storageMapper.selectByPrimaryKey(id);
     }
 
-    public List<sotwoStorage> querySelective(String key, String name, Integer page, Integer limit, String sort, String order) {
-        sotwoStorageExample example = new sotwoStorageExample();
-        sotwoStorageExample.Criteria criteria = example.createCriteria();
+    public List<SotwoStorage> querySelective(String key, String name, Integer page, Integer limit, String sort, String order) {
+        SotwoStorageExample example = new SotwoStorageExample();
+        SotwoStorageExample.Criteria criteria = example.createCriteria();
 
         if(!StringUtils.isEmpty(key)){
             criteria.andKeyEqualTo(key);
@@ -65,8 +65,8 @@ public class sotwoStorageService {
     }
 
     public int countSelective(String key, String name, Integer page, Integer size, String sort, String order) {
-        sotwoStorageExample example = new sotwoStorageExample();
-        sotwoStorageExample.Criteria criteria = example.createCriteria();
+        SotwoStorageExample example = new SotwoStorageExample();
+        SotwoStorageExample.Criteria criteria = example.createCriteria();
 
         if(!StringUtils.isEmpty(key)){
             criteria.andKeyEqualTo(key);

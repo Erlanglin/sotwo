@@ -3,9 +3,9 @@ package org.myoranges.sotwo.admin.web;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.myoranges.sotwo.admin.annotation.LoginAdmin;
-import org.myoranges.sotwo.db.domain.sotwoGoodsSpecification;
-import org.myoranges.sotwo.db.service.sotwoGoodsSpecificationService;
 import org.myoranges.sotwo.core.util.ResponseUtil;
+import org.myoranges.sotwo.db.domain.SotwoGoodsSpecification;
+import org.myoranges.sotwo.db.service.SotwoGoodsSpecificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +19,7 @@ public class GoodsSpecificationController {
     private final Log logger = LogFactory.getLog(GoodsSpecificationController.class);
 
     @Autowired
-    private sotwoGoodsSpecificationService goodsSpecificationService;
+    private SotwoGoodsSpecificationService goodsSpecificationService;
 
     @GetMapping("/list")
     public Object list(@LoginAdmin Integer adminId,
@@ -31,7 +31,7 @@ public class GoodsSpecificationController {
             return ResponseUtil.unlogin();
         }
 
-        List<sotwoGoodsSpecification> goodsSpecificationList = goodsSpecificationService.querySelective(goodsId, page, limit, sort, order);
+        List<SotwoGoodsSpecification> goodsSpecificationList = goodsSpecificationService.querySelective(goodsId, page, limit, sort, order);
         int total = goodsSpecificationService.countSelective(goodsId, page, limit, sort, order);
         Map<String, Object> data = new HashMap<>();
         data.put("total", total);
@@ -41,7 +41,7 @@ public class GoodsSpecificationController {
     }
 
     @PostMapping("/create")
-    public Object create(@LoginAdmin Integer adminId, @RequestBody sotwoGoodsSpecification goodsSpecification){
+    public Object create(@LoginAdmin Integer adminId, @RequestBody SotwoGoodsSpecification goodsSpecification){
         if(adminId == null){
             return ResponseUtil.unlogin();
         }
@@ -59,12 +59,12 @@ public class GoodsSpecificationController {
             return ResponseUtil.badArgument();
         }
 
-        sotwoGoodsSpecification goodsSpecification = goodsSpecificationService.findById(id);
+        SotwoGoodsSpecification goodsSpecification = goodsSpecificationService.findById(id);
         return ResponseUtil.ok(goodsSpecification);
     }
 
     @PostMapping("/update")
-    public Object update(@LoginAdmin Integer adminId, @RequestBody sotwoGoodsSpecification goodsSpecification){
+    public Object update(@LoginAdmin Integer adminId, @RequestBody SotwoGoodsSpecification goodsSpecification){
         if(adminId == null){
             return ResponseUtil.unlogin();
         }
@@ -73,7 +73,7 @@ public class GoodsSpecificationController {
     }
 
     @PostMapping("/delete")
-    public Object delete(@LoginAdmin Integer adminId, @RequestBody sotwoGoodsSpecification goodsSpecification){
+    public Object delete(@LoginAdmin Integer adminId, @RequestBody SotwoGoodsSpecification goodsSpecification){
         if(adminId == null){
             return ResponseUtil.unlogin();
         }

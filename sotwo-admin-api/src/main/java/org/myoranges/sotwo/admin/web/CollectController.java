@@ -3,9 +3,9 @@ package org.myoranges.sotwo.admin.web;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.myoranges.sotwo.admin.annotation.LoginAdmin;
-import org.myoranges.sotwo.db.domain.sotwoCollect;
-import org.myoranges.sotwo.db.service.sotwoCollectService;
 import org.myoranges.sotwo.core.util.ResponseUtil;
+import org.myoranges.sotwo.db.domain.SotwoCollect;
+import org.myoranges.sotwo.db.service.SotwoCollectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +19,7 @@ public class CollectController {
     private final Log logger = LogFactory.getLog(CollectController.class);
 
     @Autowired
-    private sotwoCollectService collectService;
+    private SotwoCollectService collectService;
 
     @GetMapping("/list")
     public Object list(@LoginAdmin Integer adminId,
@@ -31,7 +31,7 @@ public class CollectController {
             return ResponseUtil.unlogin();
         }
 
-        List<sotwoCollect> collectList = collectService.querySelective(userId, valueId, page, limit, sort, order);
+        List<SotwoCollect> collectList = collectService.querySelective(userId, valueId, page, limit, sort, order);
         int total = collectService.countSelective(userId, valueId, page, limit, sort, order);
         Map<String, Object> data = new HashMap<>();
         data.put("total", total);
@@ -41,7 +41,7 @@ public class CollectController {
     }
 
     @PostMapping("/create")
-    public Object create(@LoginAdmin Integer adminId, @RequestBody sotwoCollect collect){
+    public Object create(@LoginAdmin Integer adminId, @RequestBody SotwoCollect collect){
         if(adminId == null){
             return ResponseUtil.unlogin();
         }
@@ -58,12 +58,12 @@ public class CollectController {
             return ResponseUtil.badArgument();
         }
 
-        sotwoCollect collect = collectService.findById(id);
+        SotwoCollect collect = collectService.findById(id);
         return ResponseUtil.ok(collect);
     }
 
     @PostMapping("/update")
-    public Object update(@LoginAdmin Integer adminId, @RequestBody sotwoCollect collect){
+    public Object update(@LoginAdmin Integer adminId, @RequestBody SotwoCollect collect){
         if(adminId == null){
             return ResponseUtil.unlogin();
         }
@@ -72,7 +72,7 @@ public class CollectController {
     }
 
     @PostMapping("/delete")
-    public Object delete(@LoginAdmin Integer adminId, @RequestBody sotwoCollect collect){
+    public Object delete(@LoginAdmin Integer adminId, @RequestBody SotwoCollect collect){
         if(adminId == null){
             return ResponseUtil.unlogin();
         }

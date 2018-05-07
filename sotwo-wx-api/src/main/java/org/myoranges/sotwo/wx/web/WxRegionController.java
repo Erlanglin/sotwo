@@ -2,9 +2,9 @@ package org.myoranges.sotwo.wx.web;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.myoranges.sotwo.db.domain.sotwoRegion;
-import org.myoranges.sotwo.db.service.sotwoRegionService;
 import org.myoranges.sotwo.core.util.ResponseUtil;
+import org.myoranges.sotwo.db.domain.SotwoRegion;
+import org.myoranges.sotwo.db.service.SotwoRegionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +18,7 @@ public class WxRegionController {
     private final Log logger = LogFactory.getLog(WxRegionController.class);
 
     @Autowired
-    private sotwoRegionService regionService;
+    private SotwoRegionService regionService;
 
     /**
      * 区域数据
@@ -42,7 +42,7 @@ public class WxRegionController {
             return ResponseUtil.badArgument();
         }
 
-        List<sotwoRegion> regionList = regionService.queryByPid(pid);
+        List<SotwoRegion> regionList = regionService.queryByPid(pid);
         return ResponseUtil.ok(regionList);
     }
 

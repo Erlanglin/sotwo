@@ -2,27 +2,27 @@ package org.myoranges.sotwo.db.service;
 
 import com.github.pagehelper.PageHelper;
 import org.myoranges.sotwo.db.dao.SotwoGoodsAttributeMapper;
-import org.myoranges.sotwo.db.domain.sotwoGoodsAttribute;
-import org.myoranges.sotwo.db.domain.sotwoGoodsAttributeExample;
+import org.myoranges.sotwo.db.domain.SotwoGoodsAttribute;
+import org.myoranges.sotwo.db.domain.SotwoGoodsAttributeExample;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
 
 @Service
-public class sotwoGoodsAttributeService {
+public class SotwoGoodsAttributeService {
     @Resource
     private SotwoGoodsAttributeMapper goodsAttributeMapper;
 
-    public List<sotwoGoodsAttribute> queryByGid(Integer goodsId) {
-        sotwoGoodsAttributeExample example = new sotwoGoodsAttributeExample();
+    public List<SotwoGoodsAttribute> queryByGid(Integer goodsId) {
+        SotwoGoodsAttributeExample example = new SotwoGoodsAttributeExample();
         example.or().andGoodsIdEqualTo(goodsId).andDeletedEqualTo(false);
         return goodsAttributeMapper.selectByExample(example);
     }
 
-    public List<sotwoGoodsAttribute> querySelective(Integer goodsId, Integer page, Integer size, String sort, String order) {
-        sotwoGoodsAttributeExample example = new sotwoGoodsAttributeExample();
-        sotwoGoodsAttributeExample.Criteria criteria = example.createCriteria();
+    public List<SotwoGoodsAttribute> querySelective(Integer goodsId, Integer page, Integer size, String sort, String order) {
+        SotwoGoodsAttributeExample example = new SotwoGoodsAttributeExample();
+        SotwoGoodsAttributeExample.Criteria criteria = example.createCriteria();
 
         if(goodsId != null){
             criteria.andGoodsIdEqualTo(goodsId);
@@ -34,8 +34,8 @@ public class sotwoGoodsAttributeService {
     }
 
     public int countSelective(Integer goodsId, Integer page, Integer size, String sort, String order) {
-        sotwoGoodsAttributeExample example = new sotwoGoodsAttributeExample();
-        sotwoGoodsAttributeExample.Criteria criteria = example.createCriteria();
+        SotwoGoodsAttributeExample example = new SotwoGoodsAttributeExample();
+        SotwoGoodsAttributeExample.Criteria criteria = example.createCriteria();
 
         if(goodsId != null){
             criteria.andGoodsIdEqualTo(goodsId);
@@ -45,12 +45,12 @@ public class sotwoGoodsAttributeService {
         return (int)goodsAttributeMapper.countByExample(example);
     }
 
-    public void updateById(sotwoGoodsAttribute goodsAttribute) {
+    public void updateById(SotwoGoodsAttribute goodsAttribute) {
         goodsAttributeMapper.updateByPrimaryKeySelective(goodsAttribute);
     }
 
     public void deleteById(Integer id) {
-        sotwoGoodsAttribute goodsAttribute = goodsAttributeMapper.selectByPrimaryKey(id);
+        SotwoGoodsAttribute goodsAttribute = goodsAttributeMapper.selectByPrimaryKey(id);
         if(goodsAttribute == null){
             return;
         }
@@ -58,11 +58,11 @@ public class sotwoGoodsAttributeService {
         goodsAttributeMapper.updateByPrimaryKey(goodsAttribute);
     }
 
-    public void add(sotwoGoodsAttribute goodsAttribute) {
+    public void add(SotwoGoodsAttribute goodsAttribute) {
         goodsAttributeMapper.insertSelective(goodsAttribute);
     }
 
-    public sotwoGoodsAttribute findById(Integer id) {
+    public SotwoGoodsAttribute findById(Integer id) {
         return goodsAttributeMapper.selectByPrimaryKey(id);
     }
 }

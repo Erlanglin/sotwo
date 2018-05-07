@@ -2,14 +2,14 @@ package org.myoranges.sotwo.admin.web;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.myoranges.sotwo.admin.dao.AdminToken;
 import org.myoranges.sotwo.admin.annotation.LoginAdmin;
+import org.myoranges.sotwo.admin.dao.AdminToken;
 import org.myoranges.sotwo.admin.service.AdminTokenManager;
-import org.myoranges.sotwo.core.util.bcrypt.BCryptPasswordEncoder;
-import org.myoranges.sotwo.db.domain.sotwoAdmin;
-import org.myoranges.sotwo.db.service.sotwoAdminService;
 import org.myoranges.sotwo.core.util.JacksonUtil;
 import org.myoranges.sotwo.core.util.ResponseUtil;
+import org.myoranges.sotwo.core.util.bcrypt.BCryptPasswordEncoder;
+import org.myoranges.sotwo.db.domain.SotwoAdmin;
+import org.myoranges.sotwo.db.service.SotwoAdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -26,7 +26,7 @@ public class AuthController {
     private final Log logger = LogFactory.getLog(AuthController.class);
 
     @Autowired
-    private sotwoAdminService adminService;
+    private SotwoAdminService adminService;
 
     /*
      *  { username : value, password : value }
@@ -40,12 +40,12 @@ public class AuthController {
             return ResponseUtil.badArgument();
         }
 
-        List<sotwoAdmin> adminList = adminService.findAdmin(username);
+        List<SotwoAdmin> adminList = adminService.findAdmin(username);
         Assert.state(adminList.size() < 2, "同一个用户名存在两个账户");
         if(adminList.size() == 0){
             return ResponseUtil.badArgumentValue();
         }
-        sotwoAdmin admin = adminList.get(0);
+        SotwoAdmin admin = adminList.get(0);
 
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         if(!encoder.matches(password, admin.getPassword())){

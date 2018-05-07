@@ -3,9 +3,9 @@ package org.myoranges.sotwo.admin.web;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.myoranges.sotwo.admin.annotation.LoginAdmin;
-import org.myoranges.sotwo.db.domain.sotwoIssue;
-import org.myoranges.sotwo.db.service.sotwoIssueService;
 import org.myoranges.sotwo.core.util.ResponseUtil;
+import org.myoranges.sotwo.db.domain.SotwoIssue;
+import org.myoranges.sotwo.db.service.SotwoIssueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +19,7 @@ public class IssueController {
     private final Log logger = LogFactory.getLog(IssueController.class);
 
     @Autowired
-    private sotwoIssueService issueService;
+    private SotwoIssueService issueService;
 
     @GetMapping("/list")
     public Object list(@LoginAdmin Integer adminId,
@@ -31,7 +31,7 @@ public class IssueController {
             return ResponseUtil.unlogin();
         }
 
-        List<sotwoIssue> issueList = issueService.querySelective(question, page, limit, sort, order);
+        List<SotwoIssue> issueList = issueService.querySelective(question, page, limit, sort, order);
         int total = issueService.countSelective(question, page, limit, sort, order);
         Map<String, Object> data = new HashMap<>();
         data.put("total", total);
@@ -41,7 +41,7 @@ public class IssueController {
     }
 
     @PostMapping("/create")
-    public Object create(@LoginAdmin Integer adminId, @RequestBody sotwoIssue brand){
+    public Object create(@LoginAdmin Integer adminId, @RequestBody SotwoIssue brand){
         if(adminId == null){
             return ResponseUtil.unlogin();
         }
@@ -59,12 +59,12 @@ public class IssueController {
             return ResponseUtil.badArgument();
         }
 
-        sotwoIssue brand = issueService.findById(id);
+        SotwoIssue brand = issueService.findById(id);
         return ResponseUtil.ok(brand);
     }
 
     @PostMapping("/update")
-    public Object update(@LoginAdmin Integer adminId, @RequestBody sotwoIssue brand){
+    public Object update(@LoginAdmin Integer adminId, @RequestBody SotwoIssue brand){
         if(adminId == null){
             return ResponseUtil.unlogin();
         }
@@ -73,7 +73,7 @@ public class IssueController {
     }
 
     @PostMapping("/delete")
-    public Object delete(@LoginAdmin Integer adminId, @RequestBody sotwoIssue brand){
+    public Object delete(@LoginAdmin Integer adminId, @RequestBody SotwoIssue brand){
         if(adminId == null){
             return ResponseUtil.unlogin();
         }

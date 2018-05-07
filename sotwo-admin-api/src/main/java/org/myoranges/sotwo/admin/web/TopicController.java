@@ -3,9 +3,9 @@ package org.myoranges.sotwo.admin.web;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.myoranges.sotwo.admin.annotation.LoginAdmin;
-import org.myoranges.sotwo.db.domain.sotwoTopic;
-import org.myoranges.sotwo.db.service.sotwoTopicService;
 import org.myoranges.sotwo.core.util.ResponseUtil;
+import org.myoranges.sotwo.db.domain.SotwoTopic;
+import org.myoranges.sotwo.db.service.SotwoTopicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +19,7 @@ public class TopicController {
     private final Log logger = LogFactory.getLog(TopicController.class);
 
     @Autowired
-    private sotwoTopicService topicService;
+    private SotwoTopicService topicService;
 
     @GetMapping("/list")
     public Object list(@LoginAdmin Integer adminId,
@@ -31,7 +31,7 @@ public class TopicController {
             return ResponseUtil.unlogin();
         }
 
-        List<sotwoTopic> topicList = topicService.querySelective(title, subtitle, page, limit, sort, order);
+        List<SotwoTopic> topicList = topicService.querySelective(title, subtitle, page, limit, sort, order);
         int total = topicService.countSelective(title, subtitle, page, limit, sort, order);
         Map<String, Object> data = new HashMap<>();
         data.put("total", total);
@@ -41,7 +41,7 @@ public class TopicController {
     }
 
     @PostMapping("/create")
-    public Object create(@LoginAdmin Integer adminId, @RequestBody sotwoTopic topic){
+    public Object create(@LoginAdmin Integer adminId, @RequestBody SotwoTopic topic){
         if(adminId == null){
             return ResponseUtil.unlogin();
         }
@@ -59,12 +59,12 @@ public class TopicController {
             return ResponseUtil.badArgument();
         }
 
-        sotwoTopic brand = topicService.findById(id);
+        SotwoTopic brand = topicService.findById(id);
         return ResponseUtil.ok(brand);
     }
 
     @PostMapping("/update")
-    public Object update(@LoginAdmin Integer adminId, @RequestBody sotwoTopic topic){
+    public Object update(@LoginAdmin Integer adminId, @RequestBody SotwoTopic topic){
         if(adminId == null){
             return ResponseUtil.unlogin();
         }
@@ -73,7 +73,7 @@ public class TopicController {
     }
 
     @PostMapping("/delete")
-    public Object delete(@LoginAdmin Integer adminId, @RequestBody sotwoTopic topic){
+    public Object delete(@LoginAdmin Integer adminId, @RequestBody SotwoTopic topic){
         if(adminId == null){
             return ResponseUtil.unlogin();
         }

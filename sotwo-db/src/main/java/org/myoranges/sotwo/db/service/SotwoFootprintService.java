@@ -2,8 +2,8 @@ package org.myoranges.sotwo.db.service;
 
 import com.github.pagehelper.PageHelper;
 import org.myoranges.sotwo.db.dao.SotwoFootprintMapper;
-import org.myoranges.sotwo.db.domain.sotwoFootprint;
-import org.myoranges.sotwo.db.domain.sotwoFootprintExample;
+import org.myoranges.sotwo.db.domain.SotwoFootprint;
+import org.myoranges.sotwo.db.domain.SotwoFootprintExample;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -11,30 +11,30 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @Service
-public class sotwoFootprintService {
+public class SotwoFootprintService {
     @Resource
     private SotwoFootprintMapper footprintMapper;
 
-    public List<sotwoFootprint> queryByAddTime(Integer userId, Integer page, Integer size) {
-        sotwoFootprintExample example = new sotwoFootprintExample();
+    public List<SotwoFootprint> queryByAddTime(Integer userId, Integer page, Integer size) {
+        SotwoFootprintExample example = new SotwoFootprintExample();
         example.or().andUserIdEqualTo(userId).andDeletedEqualTo(false);
-        example.setOrderByClause(sotwoFootprint.Column.addTime.desc());
+        example.setOrderByClause(SotwoFootprint.Column.addTime.desc());
         PageHelper.startPage(page, size);
         return footprintMapper.selectByExample(example);
     }
 
     public int countByAddTime(Integer userId,Integer page, Integer size) {
-        sotwoFootprintExample example = new sotwoFootprintExample();
+        SotwoFootprintExample example = new SotwoFootprintExample();
         example.or().andUserIdEqualTo(userId).andDeletedEqualTo(false);
         return (int)footprintMapper.countByExample(example);
     }
 
-    public sotwoFootprint findById(Integer id) {
+    public SotwoFootprint findById(Integer id) {
         return footprintMapper.selectByPrimaryKey(id);
     }
 
     public void deleteById(Integer id){
-        sotwoFootprint footprint = footprintMapper.selectByPrimaryKey(id);
+        SotwoFootprint footprint = footprintMapper.selectByPrimaryKey(id);
         if(footprint == null){
             return;
         }
@@ -42,13 +42,13 @@ public class sotwoFootprintService {
         footprintMapper.updateByPrimaryKey(footprint);
     }
 
-    public void add(sotwoFootprint footprint) {
+    public void add(SotwoFootprint footprint) {
         footprintMapper.insertSelective(footprint);
     }
 
-    public List<sotwoFootprint> querySelective(String userId, String goodsId, Integer page, Integer size, String sort, String order) {
-        sotwoFootprintExample example = new sotwoFootprintExample();
-        sotwoFootprintExample.Criteria criteria = example.createCriteria();
+    public List<SotwoFootprint> querySelective(String userId, String goodsId, Integer page, Integer size, String sort, String order) {
+        SotwoFootprintExample example = new SotwoFootprintExample();
+        SotwoFootprintExample.Criteria criteria = example.createCriteria();
 
         if(!StringUtils.isEmpty(userId)){
             criteria.andUserIdEqualTo(Integer.valueOf(userId));
@@ -63,8 +63,8 @@ public class sotwoFootprintService {
     }
 
     public int countSelective(String userId, String goodsId, Integer page, Integer size, String sort, String order) {
-        sotwoFootprintExample example = new sotwoFootprintExample();
-        sotwoFootprintExample.Criteria criteria = example.createCriteria();
+        SotwoFootprintExample example = new SotwoFootprintExample();
+        SotwoFootprintExample.Criteria criteria = example.createCriteria();
 
         if(!StringUtils.isEmpty(userId)){
             criteria.andUserIdEqualTo(Integer.valueOf(userId));
@@ -77,7 +77,7 @@ public class sotwoFootprintService {
         return (int)footprintMapper.countByExample(example);
     }
 
-    public void updateById(sotwoFootprint collect) {
+    public void updateById(SotwoFootprint collect) {
         footprintMapper.updateByPrimaryKeySelective(collect);
     }
 

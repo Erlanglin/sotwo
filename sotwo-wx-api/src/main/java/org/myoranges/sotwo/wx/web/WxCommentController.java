@@ -1,14 +1,14 @@
 package org.myoranges.sotwo.wx.web;
 
 import org.apache.commons.lang3.ObjectUtils;
-import org.myoranges.sotwo.db.domain.sotwoComment;
-import org.myoranges.sotwo.db.service.sotwoCommentService;
-import org.myoranges.sotwo.db.service.sotwoCouponService;
-import org.myoranges.sotwo.db.service.sotwoUserService;
 import org.myoranges.sotwo.core.util.ResponseUtil;
+import org.myoranges.sotwo.db.domain.SotwoComment;
+import org.myoranges.sotwo.db.service.SotwoCommentService;
+import org.myoranges.sotwo.db.service.SotwoCouponService;
+import org.myoranges.sotwo.db.service.SotwoUserService;
 import org.myoranges.sotwo.wx.annotation.LoginUser;
-import org.myoranges.sotwo.wx.service.UserInfoService;
 import org.myoranges.sotwo.wx.dao.UserInfo;
+import org.myoranges.sotwo.wx.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,11 +22,11 @@ import java.util.Map;
 @RequestMapping("/wx/comment")
 public class WxCommentController {
     @Autowired
-    private sotwoCommentService commentService;
+    private SotwoCommentService commentService;
     @Autowired
-    private sotwoUserService userService;
+    private SotwoUserService userService;
     @Autowired
-    private sotwoCouponService couponService;
+    private SotwoCouponService couponService;
     @Autowired
     private UserInfoService userInfoService;
 
@@ -49,7 +49,7 @@ public class WxCommentController {
      *   失败则 { errno: XXX, errmsg: XXX }
      */
     @PostMapping("post")
-    public Object post(@LoginUser Integer userId, @RequestBody sotwoComment comment) {
+    public Object post(@LoginUser Integer userId, @RequestBody SotwoComment comment) {
         if(userId == null){
             return ResponseUtil.unlogin();
         }
@@ -121,11 +121,11 @@ public class WxCommentController {
             return ResponseUtil.badArgument();
         }
 
-        List<sotwoComment> commentList = commentService.query(typeId, valueId, showType, page, size);
+        List<SotwoComment> commentList = commentService.query(typeId, valueId, showType, page, size);
         int count = commentService.count(typeId, valueId, showType, page, size);
 
         List<Map<String, Object>> commentVoList = new ArrayList<>(commentList.size());
-        for(sotwoComment comment : commentList){
+        for(SotwoComment comment : commentList){
             Map<String, Object> commentVo = new HashMap<>();
             UserInfo userInfo = userInfoService.getInfo(comment.getUserId());
             commentVo.put("userInfo", userInfo);

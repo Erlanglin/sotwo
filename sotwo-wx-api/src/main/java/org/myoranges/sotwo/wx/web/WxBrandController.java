@@ -2,9 +2,9 @@ package org.myoranges.sotwo.wx.web;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.myoranges.sotwo.db.domain.sotwoBrand;
-import org.myoranges.sotwo.db.service.sotwoBrandService;
 import org.myoranges.sotwo.core.util.ResponseUtil;
+import org.myoranges.sotwo.db.domain.SotwoBrand;
+import org.myoranges.sotwo.db.service.SotwoBrandService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,7 +21,7 @@ public class WxBrandController {
     private final Log logger = LogFactory.getLog(WxBrandController.class);
 
     @Autowired
-    private sotwoBrandService brandService;
+    private SotwoBrandService brandService;
 
     /**
      * 品牌列表
@@ -45,7 +45,7 @@ public class WxBrandController {
     public Object list(@RequestParam(value = "page", defaultValue = "1") Integer page,
                        @RequestParam(value = "size", defaultValue = "10") Integer size) {
 
-        List<sotwoBrand> brandList = brandService.query(page, size);
+        List<SotwoBrand> brandList = brandService.query(page, size);
         int total = brandService.queryTotalCount();
         int totalPages = (int) Math.ceil((double) total / size);
 
@@ -77,7 +77,7 @@ public class WxBrandController {
             return ResponseUtil.badArgument();
         }
 
-        sotwoBrand entity = brandService.findById(id);
+        SotwoBrand entity = brandService.findById(id);
         if(entity == null){
             return ResponseUtil.badArgumentValue();
         }

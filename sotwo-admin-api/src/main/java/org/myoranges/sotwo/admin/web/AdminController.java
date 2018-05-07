@@ -1,11 +1,12 @@
 package org.myoranges.sotwo.admin.web;
 
+
 import org.myoranges.sotwo.admin.annotation.LoginAdmin;
 import org.myoranges.sotwo.admin.service.AdminTokenManager;
 import org.myoranges.sotwo.core.util.ResponseUtil;
 import org.myoranges.sotwo.core.util.bcrypt.BCryptPasswordEncoder;
-import org.myoranges.sotwo.db.domain.sotwoAdmin;
-import org.myoranges.sotwo.db.service.sotwoAdminService;
+import org.myoranges.sotwo.db.domain.SotwoAdmin;
+import org.myoranges.sotwo.db.service.SotwoAdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +19,7 @@ import java.util.Map;
 @RequestMapping("/admin/admin")
 public class AdminController {
     @Autowired
-    private sotwoAdminService adminService;
+    private SotwoAdminService adminService;
 
     @GetMapping("/info")
     public Object info(String token){
@@ -26,7 +27,7 @@ public class AdminController {
         if(adminId == null){
             return ResponseUtil.badArgumentValue();
         }
-        sotwoAdmin admin = adminService.findById(adminId);
+        SotwoAdmin admin = adminService.findById(adminId);
         if(admin == null){
             return ResponseUtil.badArgumentValue();
         }
@@ -53,7 +54,7 @@ public class AdminController {
             return ResponseUtil.unlogin();
         }
 
-        List<sotwoAdmin> adminList = adminService.querySelective(username, page, limit, sort, order);
+        List<SotwoAdmin> adminList = adminService.querySelective(username, page, limit, sort, order);
         int total = adminService.countSelective(username, page, limit, sort, order);
         Map<String, Object> data = new HashMap<>();
         data.put("total", total);
@@ -63,7 +64,7 @@ public class AdminController {
     }
 
     @PostMapping("/create")
-    public Object create(@LoginAdmin Integer adminId, @RequestBody sotwoAdmin admin){
+    public Object create(@LoginAdmin Integer adminId, @RequestBody SotwoAdmin admin){
         if(adminId == null){
             return ResponseUtil.unlogin();
         }
@@ -87,12 +88,12 @@ public class AdminController {
             return ResponseUtil.badArgument();
         }
 
-        sotwoAdmin admin = adminService.findById(id);
+        SotwoAdmin admin = adminService.findById(id);
         return ResponseUtil.ok(admin);
     }
 
     @PostMapping("/update")
-    public Object update(@LoginAdmin Integer adminId, @RequestBody sotwoAdmin admin){
+    public Object update(@LoginAdmin Integer adminId, @RequestBody SotwoAdmin admin){
         if(adminId == null){
             return ResponseUtil.unlogin();
         }
@@ -107,7 +108,7 @@ public class AdminController {
     }
 
     @PostMapping("/delete")
-    public Object delete(@LoginAdmin Integer adminId, @RequestBody sotwoAdmin admin){
+    public Object delete(@LoginAdmin Integer adminId, @RequestBody SotwoAdmin admin){
         if(adminId == null){
             return ResponseUtil.unlogin();
         }

@@ -1,11 +1,12 @@
 package org.myoranges.sotwo.wx.web;
 
-import org.myoranges.sotwo.db.domain.sotwoFootprint;
-import org.myoranges.sotwo.db.domain.sotwoGoods;
-import org.myoranges.sotwo.db.service.sotwoFootprintService;
-import org.myoranges.sotwo.db.service.sotwoGoodsService;
+
 import org.myoranges.sotwo.core.util.JacksonUtil;
 import org.myoranges.sotwo.core.util.ResponseUtil;
+import org.myoranges.sotwo.db.domain.SotwoFootprint;
+import org.myoranges.sotwo.db.domain.SotwoGoods;
+import org.myoranges.sotwo.db.service.SotwoFootprintService;
+import org.myoranges.sotwo.db.service.SotwoGoodsService;
 import org.myoranges.sotwo.wx.annotation.LoginUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -19,9 +20,9 @@ import java.util.Map;
 @RequestMapping("/wx/footprint")
 public class WxFootprintController {
     @Autowired
-    private sotwoFootprintService footprintService;
+    private SotwoFootprintService footprintService;
     @Autowired
-    private sotwoGoodsService goodsService;
+    private SotwoGoodsService goodsService;
 
     /**
      * 删除用户足迹
@@ -45,7 +46,7 @@ public class WxFootprintController {
         if(footprintId == null){
             return ResponseUtil.badArgument();
         }
-        sotwoFootprint footprint = footprintService.findById(footprintId);
+        SotwoFootprint footprint = footprintService.findById(footprintId);
 
         if(footprint == null){
             return ResponseUtil.badArgumentValue();
@@ -84,18 +85,18 @@ public class WxFootprintController {
             return ResponseUtil.unlogin();
         }
 
-        List<sotwoFootprint> footprintList = footprintService.queryByAddTime(userId, page, size);
+        List<SotwoFootprint> footprintList = footprintService.queryByAddTime(userId, page, size);
         int count = footprintService.countByAddTime(userId, page, size);
         int totalPages = (int) Math.ceil((double) count / size);
 
         List<Object> footprintVoList = new ArrayList<>(footprintList.size());
-        for(sotwoFootprint footprint : footprintList){
+        for(SotwoFootprint footprint : footprintList){
             Map<String, Object> c = new HashMap();
             c.put("id", footprint.getId());
             c.put("goodsId", footprint.getGoodsId());
             c.put("addTime", footprint.getAddTime());
 
-            sotwoGoods goods = goodsService.findById(footprint.getGoodsId());
+            SotwoGoods goods = goodsService.findById(footprint.getGoodsId());
             c.put("name", goods.getName());
             c.put("goodsBrief", goods.getGoodsBrief());
             c.put("listPicUrl", goods.getListPicUrl());

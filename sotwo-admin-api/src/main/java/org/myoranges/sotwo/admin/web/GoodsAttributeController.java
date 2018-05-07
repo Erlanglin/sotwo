@@ -3,9 +3,9 @@ package org.myoranges.sotwo.admin.web;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.myoranges.sotwo.admin.annotation.LoginAdmin;
-import org.myoranges.sotwo.db.domain.sotwoGoodsAttribute;
-import org.myoranges.sotwo.db.service.sotwoGoodsAttributeService;
 import org.myoranges.sotwo.core.util.ResponseUtil;
+import org.myoranges.sotwo.db.domain.SotwoGoodsAttribute;
+import org.myoranges.sotwo.db.service.SotwoGoodsAttributeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +19,7 @@ public class GoodsAttributeController {
     private final Log logger = LogFactory.getLog(GoodsAttributeController.class);
 
     @Autowired
-    private sotwoGoodsAttributeService goodsAttributeService;
+    private SotwoGoodsAttributeService goodsAttributeService;
 
     @GetMapping("/list")
     public Object list(@LoginAdmin Integer adminId,
@@ -31,7 +31,7 @@ public class GoodsAttributeController {
             return ResponseUtil.unlogin();
         }
 
-        List<sotwoGoodsAttribute> goodsAttributeList = goodsAttributeService.querySelective(goodsId, page, limit, sort, order);
+        List<SotwoGoodsAttribute> goodsAttributeList = goodsAttributeService.querySelective(goodsId, page, limit, sort, order);
         int total = goodsAttributeService.countSelective(goodsId, page, limit, sort, order);
         Map<String, Object> data = new HashMap<>();
         data.put("total", total);
@@ -41,7 +41,7 @@ public class GoodsAttributeController {
     }
 
     @PostMapping("/create")
-    public Object create(@LoginAdmin Integer adminId, @RequestBody sotwoGoodsAttribute goodsAttribute){
+    public Object create(@LoginAdmin Integer adminId, @RequestBody SotwoGoodsAttribute goodsAttribute){
         if(adminId == null){
             return ResponseUtil.unlogin();
         }
@@ -59,12 +59,12 @@ public class GoodsAttributeController {
             return ResponseUtil.badArgument();
         }
 
-        sotwoGoodsAttribute goodsAttribute = goodsAttributeService.findById(id);
+        SotwoGoodsAttribute goodsAttribute = goodsAttributeService.findById(id);
         return ResponseUtil.ok(goodsAttribute);
     }
 
     @PostMapping("/update")
-    public Object update(@LoginAdmin Integer adminId, @RequestBody sotwoGoodsAttribute goodsAttribute){
+    public Object update(@LoginAdmin Integer adminId, @RequestBody SotwoGoodsAttribute goodsAttribute){
         if(adminId == null){
             return ResponseUtil.unlogin();
         }
@@ -73,7 +73,7 @@ public class GoodsAttributeController {
     }
 
     @PostMapping("/delete")
-    public Object delete(@LoginAdmin Integer adminId, @RequestBody sotwoGoodsAttribute goodsAttribute){
+    public Object delete(@LoginAdmin Integer adminId, @RequestBody SotwoGoodsAttribute goodsAttribute){
         if(adminId == null){
             return ResponseUtil.unlogin();
         }

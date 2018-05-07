@@ -3,9 +3,9 @@ package org.myoranges.sotwo.admin.web;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.myoranges.sotwo.admin.annotation.LoginAdmin;
-import org.myoranges.sotwo.db.domain.sotwoFootprint;
-import org.myoranges.sotwo.db.service.sotwoFootprintService;
 import org.myoranges.sotwo.core.util.ResponseUtil;
+import org.myoranges.sotwo.db.domain.SotwoFootprint;
+import org.myoranges.sotwo.db.service.SotwoFootprintService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +19,7 @@ public class FootprintController {
     private final Log logger = LogFactory.getLog(FootprintController.class);
 
     @Autowired
-    private sotwoFootprintService footprintService;
+    private SotwoFootprintService footprintService;
 
     @GetMapping("/list")
     public Object list(@LoginAdmin Integer adminId,
@@ -31,7 +31,7 @@ public class FootprintController {
             return ResponseUtil.unlogin();
         }
 
-        List<sotwoFootprint> footprintList = footprintService.querySelective(userId, goodsId, page, limit, sort, order);
+        List<SotwoFootprint> footprintList = footprintService.querySelective(userId, goodsId, page, limit, sort, order);
         int total = footprintService.countSelective(userId, goodsId, page, limit, sort, order);
         Map<String, Object> data = new HashMap<>();
         data.put("total", total);
@@ -41,7 +41,7 @@ public class FootprintController {
     }
 
     @PostMapping("/create")
-    public Object create(@LoginAdmin Integer adminId, @RequestBody sotwoFootprint footprint){
+    public Object create(@LoginAdmin Integer adminId, @RequestBody SotwoFootprint footprint){
         if(adminId == null){
             return ResponseUtil.unlogin();
         }
@@ -58,12 +58,12 @@ public class FootprintController {
             return ResponseUtil.badArgument();
         }
 
-        sotwoFootprint footprint = footprintService.findById(id);
+        SotwoFootprint footprint = footprintService.findById(id);
         return ResponseUtil.ok(footprint);
     }
 
     @PostMapping("/update")
-    public Object update(@LoginAdmin Integer adminId, @RequestBody sotwoFootprint footprint){
+    public Object update(@LoginAdmin Integer adminId, @RequestBody SotwoFootprint footprint){
         if(adminId == null){
             return ResponseUtil.unlogin();
         }
@@ -72,7 +72,7 @@ public class FootprintController {
     }
 
     @PostMapping("/delete")
-    public Object delete(@LoginAdmin Integer adminId, @RequestBody sotwoFootprint footprint){
+    public Object delete(@LoginAdmin Integer adminId, @RequestBody SotwoFootprint footprint){
         if(adminId == null){
             return ResponseUtil.unlogin();
         }

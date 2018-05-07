@@ -2,8 +2,8 @@ package org.myoranges.sotwo.db.service;
 
 import com.github.pagehelper.PageHelper;
 import org.myoranges.sotwo.db.dao.SotwoGoodsSpecificationMapper;
-import org.myoranges.sotwo.db.domain.sotwoGoodsSpecification;
-import org.myoranges.sotwo.db.domain.sotwoGoodsSpecificationExample;
+import org.myoranges.sotwo.db.domain.SotwoGoodsSpecification;
+import org.myoranges.sotwo.db.domain.SotwoGoodsSpecificationExample;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -13,23 +13,23 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class sotwoGoodsSpecificationService {
+public class SotwoGoodsSpecificationService {
     @Resource
     private SotwoGoodsSpecificationMapper goodsSpecificationMapper;
 
-    public List<sotwoGoodsSpecification> queryByGid(Integer id) {
-        sotwoGoodsSpecificationExample example = new sotwoGoodsSpecificationExample();
+    public List<SotwoGoodsSpecification> queryByGid(Integer id) {
+        SotwoGoodsSpecificationExample example = new SotwoGoodsSpecificationExample();
         example.or().andGoodsIdEqualTo(id).andDeletedEqualTo(false);
         return goodsSpecificationMapper.selectByExample(example);
     }
 
-    public sotwoGoodsSpecification findById(Integer id) {
+    public SotwoGoodsSpecification findById(Integer id) {
         return goodsSpecificationMapper.selectByPrimaryKey(id);
     }
 
-    public List<sotwoGoodsSpecification> querySelective(Integer goodsId, Integer page, Integer size, String sort, String order) {
-        sotwoGoodsSpecificationExample example = new sotwoGoodsSpecificationExample();
-        sotwoGoodsSpecificationExample.Criteria criteria = example.createCriteria();
+    public List<SotwoGoodsSpecification> querySelective(Integer goodsId, Integer page, Integer size, String sort, String order) {
+        SotwoGoodsSpecificationExample example = new SotwoGoodsSpecificationExample();
+        SotwoGoodsSpecificationExample.Criteria criteria = example.createCriteria();
 
         if(goodsId != null){
             criteria.andGoodsIdEqualTo(goodsId);
@@ -41,8 +41,8 @@ public class sotwoGoodsSpecificationService {
     }
 
     public int countSelective(Integer goodsId, Integer page, Integer size, String sort, String order) {
-        sotwoGoodsSpecificationExample example = new sotwoGoodsSpecificationExample();
-        sotwoGoodsSpecificationExample.Criteria criteria = example.createCriteria();
+        SotwoGoodsSpecificationExample example = new SotwoGoodsSpecificationExample();
+        SotwoGoodsSpecificationExample.Criteria criteria = example.createCriteria();
 
         if(goodsId != null){
             criteria.andGoodsIdEqualTo(goodsId);
@@ -52,12 +52,12 @@ public class sotwoGoodsSpecificationService {
         return (int)goodsSpecificationMapper.countByExample(example);
     }
 
-    public void updateById(sotwoGoodsSpecification goodsSpecification) {
+    public void updateById(SotwoGoodsSpecification goodsSpecification) {
         goodsSpecificationMapper.updateByPrimaryKeySelective(goodsSpecification);
     }
 
     public void deleteById(Integer id) {
-        sotwoGoodsSpecification goodsSpecification = goodsSpecificationMapper.selectByPrimaryKey(id);
+        SotwoGoodsSpecification goodsSpecification = goodsSpecificationMapper.selectByPrimaryKey(id);
         if(goodsSpecification == null){
             return;
         }
@@ -65,12 +65,12 @@ public class sotwoGoodsSpecificationService {
         goodsSpecificationMapper.updateByPrimaryKey(goodsSpecification);
     }
 
-    public void add(sotwoGoodsSpecification goodsSpecification) {
+    public void add(SotwoGoodsSpecification goodsSpecification) {
         goodsSpecificationMapper.insertSelective(goodsSpecification);
     }
 
     public Integer[] queryIdsByGid(Integer goodsId) {
-        List<sotwoGoodsSpecification> goodsSpecificationList = queryByGid(goodsId);
+        List<SotwoGoodsSpecification> goodsSpecificationList = queryByGid(goodsId);
         Integer[] ids = new Integer[goodsSpecificationList.size()];
         for(int i = 0; i < ids.length; i++){
             ids[i] = goodsSpecificationList.get(i).getId();
@@ -80,7 +80,7 @@ public class sotwoGoodsSpecificationService {
 
     private class VO {
         private String name;
-        private List<sotwoGoodsSpecification> valueList;
+        private List<SotwoGoodsSpecification> valueList;
 
         public void setName(String name) {
             this.name = name;
@@ -90,11 +90,11 @@ public class sotwoGoodsSpecificationService {
             return name;
         }
 
-        public List<sotwoGoodsSpecification> getValueList() {
+        public List<SotwoGoodsSpecification> getValueList() {
             return valueList;
         }
 
-        public void setValueList(List<sotwoGoodsSpecification> valueList) {
+        public void setValueList(List<SotwoGoodsSpecification> valueList) {
             this.valueList = valueList;
         }
     }
@@ -115,25 +115,25 @@ public class sotwoGoodsSpecificationService {
      * @return
      */
     public Object getSpecificationVoList(Integer id) {
-        List<sotwoGoodsSpecification> goodsSpecificationList = queryByGid(id);
+        List<SotwoGoodsSpecification> goodsSpecificationList = queryByGid(id);
 
         Map<String, VO> map = new HashMap<>();
         List<VO> specificationVoList = new ArrayList<>();
 
-        for(sotwoGoodsSpecification goodsSpecification : goodsSpecificationList){
+        for(SotwoGoodsSpecification goodsSpecification : goodsSpecificationList){
             String specification = goodsSpecification.getSpecification();
             VO goodsSpecificationVo = map.get(specification);
             if(goodsSpecificationVo == null){
                 goodsSpecificationVo = new VO();
                 goodsSpecificationVo.setName(specification);
-                List<sotwoGoodsSpecification> valueList = new ArrayList<>();
+                List<SotwoGoodsSpecification> valueList = new ArrayList<>();
                 valueList.add(goodsSpecification);
                 goodsSpecificationVo.setValueList(valueList);
                 map.put(specification, goodsSpecificationVo);
                 specificationVoList.add(goodsSpecificationVo);
             }
             else{
-                List<sotwoGoodsSpecification> valueList = goodsSpecificationVo.getValueList();
+                List<SotwoGoodsSpecification> valueList = goodsSpecificationVo.getValueList();
                 valueList.add(goodsSpecification);
             }
         }

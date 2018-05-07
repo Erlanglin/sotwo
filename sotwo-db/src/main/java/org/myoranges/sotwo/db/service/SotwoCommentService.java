@@ -2,8 +2,8 @@ package org.myoranges.sotwo.db.service;
 
 import com.github.pagehelper.PageHelper;
 import org.myoranges.sotwo.db.dao.SotwoCommentMapper;
-import org.myoranges.sotwo.db.domain.sotwoComment;
-import org.myoranges.sotwo.db.domain.sotwoCommentExample;
+import org.myoranges.sotwo.db.domain.SotwoComment;
+import org.myoranges.sotwo.db.domain.SotwoCommentExample;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -12,27 +12,27 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @Service
-public class sotwoCommentService {
+public class SotwoCommentService {
     @Resource
     private SotwoCommentMapper commentMapper;
 
-    public List<sotwoComment> queryGoodsByGid(Integer id, int offset, int limit) {
-        sotwoCommentExample example = new sotwoCommentExample();
-        example.setOrderByClause(sotwoComment.Column.addTime.desc());
+    public List<SotwoComment> queryGoodsByGid(Integer id, int offset, int limit) {
+        SotwoCommentExample example = new SotwoCommentExample();
+        example.setOrderByClause(SotwoComment.Column.addTime.desc());
         example.or().andValueIdEqualTo(id).andTypeIdEqualTo((byte)0).andDeletedEqualTo(false);
         PageHelper.startPage(offset, limit);
         return commentMapper.selectByExample(example);
     }
 
     public int countGoodsByGid(Integer id, int offset, int limit) {
-        sotwoCommentExample example = new sotwoCommentExample();
+        SotwoCommentExample example = new SotwoCommentExample();
         example.or().andValueIdEqualTo(id).andTypeIdEqualTo((byte)0).andDeletedEqualTo(false);
         return (int)commentMapper.countByExample(example);
     }
 
-    public List<sotwoComment> query(Byte typeId, Integer valueId, Integer showType, Integer offset, Integer limit) {
-        sotwoCommentExample example = new sotwoCommentExample();
-        example.setOrderByClause(sotwoComment.Column.addTime.desc());
+    public List<SotwoComment> query(Byte typeId, Integer valueId, Integer showType, Integer offset, Integer limit) {
+        SotwoCommentExample example = new SotwoCommentExample();
+        example.setOrderByClause(SotwoComment.Column.addTime.desc());
         if(showType == 0) {
             example.or().andValueIdEqualTo(valueId).andTypeIdEqualTo(typeId).andDeletedEqualTo(false);
         }
@@ -47,7 +47,7 @@ public class sotwoCommentService {
     }
 
     public int count(Byte typeId, Integer valueId, Integer showType, Integer offset, Integer size){
-        sotwoCommentExample example = new sotwoCommentExample();
+        SotwoCommentExample example = new SotwoCommentExample();
         if(showType == 0) {
             example.or().andValueIdEqualTo(valueId).andTypeIdEqualTo(typeId).andDeletedEqualTo(false);
         }
@@ -60,20 +60,20 @@ public class sotwoCommentService {
         return (int)commentMapper.countByExample(example);
     }
 
-    public Integer save(sotwoComment comment) {
+    public Integer save(SotwoComment comment) {
         return commentMapper.insertSelective(comment);
     }
 
 
-    public void update(sotwoComment comment) {
+    public void update(SotwoComment comment) {
         commentMapper.updateByPrimaryKeySelective(comment);
     }
 
 
-    public List<sotwoComment> querySelective(String userId, String valueId, Integer page, Integer size, String sort, String order) {
-        sotwoCommentExample example = new sotwoCommentExample();
-        example.setOrderByClause(sotwoComment.Column.addTime.desc());
-        sotwoCommentExample.Criteria criteria = example.createCriteria();
+    public List<SotwoComment> querySelective(String userId, String valueId, Integer page, Integer size, String sort, String order) {
+        SotwoCommentExample example = new SotwoCommentExample();
+        example.setOrderByClause(SotwoComment.Column.addTime.desc());
+        SotwoCommentExample.Criteria criteria = example.createCriteria();
 
         if(!StringUtils.isEmpty(userId)){
             criteria.andUserIdEqualTo(Integer.valueOf(userId));
@@ -88,8 +88,8 @@ public class sotwoCommentService {
     }
 
     public int countSelective(String userId, String valueId, Integer page, Integer size, String sort, String order) {
-        sotwoCommentExample example = new sotwoCommentExample();
-        sotwoCommentExample.Criteria criteria = example.createCriteria();
+        SotwoCommentExample example = new SotwoCommentExample();
+        SotwoCommentExample.Criteria criteria = example.createCriteria();
 
         if(!StringUtils.isEmpty(userId)){
             criteria.andUserIdEqualTo(Integer.valueOf(userId));
@@ -102,12 +102,12 @@ public class sotwoCommentService {
         return (int)commentMapper.countByExample(example);
     }
 
-    public void updateById(sotwoComment comment) {
+    public void updateById(SotwoComment comment) {
         commentMapper.updateByPrimaryKeySelective(comment);
     }
 
     public void deleteById(Integer id) {
-        sotwoComment comment = commentMapper.selectByPrimaryKey(id);
+        SotwoComment comment = commentMapper.selectByPrimaryKey(id);
         if(comment == null){
             return;
         }
@@ -115,11 +115,11 @@ public class sotwoCommentService {
         commentMapper.updateByPrimaryKey(comment);
     }
 
-    public void add(sotwoComment comment) {
+    public void add(SotwoComment comment) {
         commentMapper.insertSelective(comment);
     }
 
-    public sotwoComment findById(Integer id) {
+    public SotwoComment findById(Integer id) {
         return commentMapper.selectByPrimaryKey(id);
     }
 }

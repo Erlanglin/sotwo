@@ -2,10 +2,10 @@ package org.myoranges.sotwo.wx.web;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.myoranges.sotwo.db.domain.sotwoAddress;
-import org.myoranges.sotwo.db.service.sotwoAddressService;
-import org.myoranges.sotwo.db.service.sotwoRegionService;
 import org.myoranges.sotwo.core.util.ResponseUtil;
+import org.myoranges.sotwo.db.domain.SotwoAddress;
+import org.myoranges.sotwo.db.service.SotwoAddressService;
+import org.myoranges.sotwo.db.service.SotwoRegionService;
 import org.myoranges.sotwo.wx.annotation.LoginUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,9 +21,9 @@ public class WxAddressController {
     private final Log logger = LogFactory.getLog(WxAddressController.class);
 
     @Autowired
-    private sotwoAddressService addressService;
+    private SotwoAddressService addressService;
     @Autowired
-    private sotwoRegionService regionService;
+    private SotwoRegionService regionService;
 
     /**
      * 用户收货地址列表
@@ -43,9 +43,9 @@ public class WxAddressController {
         if(userId == null){
             return ResponseUtil.unlogin();
         }
-        List<sotwoAddress> addressList = addressService.queryByUid(userId);
+        List<SotwoAddress> addressList = addressService.queryByUid(userId);
         List<Map<String, Object>> addressVoList = new ArrayList<>(addressList.size());
-        for(sotwoAddress address : addressList){
+        for(SotwoAddress address : addressList){
             Map<String, Object> addressVo = new HashMap<>();
             addressVo.put("id", address.getId());
             addressVo.put("name", address.getName());
@@ -99,7 +99,7 @@ public class WxAddressController {
             return ResponseUtil.badArgument();
         }
 
-        sotwoAddress address = addressService.findById(id);
+        SotwoAddress address = addressService.findById(id);
         if(address == null){
             return ResponseUtil.badArgumentValue();
         }
@@ -132,7 +132,7 @@ public class WxAddressController {
      *   失败则 { errno: XXX, errmsg: XXX }
      */
     @PostMapping("save")
-    public Object save(@LoginUser Integer userId, @RequestBody sotwoAddress address) {
+    public Object save(@LoginUser Integer userId, @RequestBody SotwoAddress address) {
         if(userId == null){
             return ResponseUtil.unlogin();
         }
@@ -166,7 +166,7 @@ public class WxAddressController {
      *   失败则 { errno: XXX, errmsg: XXX }
      */
     @PostMapping("delete")
-    public Object delete(@LoginUser Integer userId, @RequestBody sotwoAddress address) {
+    public Object delete(@LoginUser Integer userId, @RequestBody SotwoAddress address) {
         if(userId == null){
             return ResponseUtil.unlogin();
         }

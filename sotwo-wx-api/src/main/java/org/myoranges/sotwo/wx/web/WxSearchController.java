@@ -1,10 +1,12 @@
 package org.myoranges.sotwo.wx.web;
 
-import org.myoranges.sotwo.db.domain.sotwoKeyword;
-import org.myoranges.sotwo.db.domain.sotwoSearchHistory;
-import org.myoranges.sotwo.db.service.sotwoKeywordService;
-import org.myoranges.sotwo.db.service.sotwoSearchHistoryService;
+
+
 import org.myoranges.sotwo.core.util.ResponseUtil;
+import org.myoranges.sotwo.db.domain.SotwoKeyword;
+import org.myoranges.sotwo.db.domain.SotwoSearchHistory;
+import org.myoranges.sotwo.db.service.SotwoKeywordService;
+import org.myoranges.sotwo.db.service.SotwoSearchHistoryService;
 import org.myoranges.sotwo.wx.annotation.LoginUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,9 +22,9 @@ import java.util.Map;
 @RequestMapping("/wx/search")
 public class WxSearchController {
     @Autowired
-    private sotwoKeywordService keywordsService;
+    private SotwoKeywordService keywordsService;
     @Autowired
-    private sotwoSearchHistoryService searchHistoryService;
+    private SotwoSearchHistoryService searchHistoryService;
 
     /**
      * 搜索页面信息
@@ -47,11 +49,11 @@ public class WxSearchController {
     @GetMapping("index")
     public Object index(@LoginUser Integer userId) {
         //取出输入框默认的关键词
-        sotwoKeyword defaultKeyword = keywordsService.queryDefault();
+        SotwoKeyword defaultKeyword = keywordsService.queryDefault();
         //取出热闹关键词
-        List<sotwoKeyword> hotKeywordList = keywordsService.queryHots();
+        List<SotwoKeyword> hotKeywordList = keywordsService.queryHots();
 
-        List<sotwoSearchHistory> historyList = null;
+        List<SotwoSearchHistory> historyList = null;
         if(userId != null) {
             //取出用户历史关键字
             historyList = searchHistoryService.queryByUid(userId);
@@ -87,11 +89,11 @@ public class WxSearchController {
 
         Integer page = 1;
         Integer size = 10;
-        List<sotwoKeyword> keywordsList = keywordsService.queryByKeyword(keyword, page, size);
+        List<SotwoKeyword> keywordsList = keywordsService.queryByKeyword(keyword, page, size);
         String[] keys = new String[keywordsList.size()];
         int index = 0;
-        for (sotwoKeyword key : keywordsList) {
-           keys[index++] = key.getKeyword();
+        for (SotwoKeyword key : keywordsList) {
+            keys[index++] = key.getKeyword();
         }
         return ResponseUtil.ok(keys);
     }

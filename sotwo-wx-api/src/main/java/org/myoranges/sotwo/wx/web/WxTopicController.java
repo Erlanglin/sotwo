@@ -1,8 +1,9 @@
 package org.myoranges.sotwo.wx.web;
 
-import org.myoranges.sotwo.db.domain.sotwoTopic;
-import org.myoranges.sotwo.db.service.sotwoTopicService;
+
 import org.myoranges.sotwo.core.util.ResponseUtil;
+import org.myoranges.sotwo.db.domain.SotwoTopic;
+import org.myoranges.sotwo.db.service.SotwoTopicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +18,7 @@ import java.util.Map;
 @RequestMapping("/wx/topic")
 public class WxTopicController {
     @Autowired
-    private sotwoTopicService topicService;
+    private SotwoTopicService topicService;
 
     /**
      * 专题列表
@@ -40,7 +41,7 @@ public class WxTopicController {
     @GetMapping("list")
     public Object list(@RequestParam(value = "page", defaultValue = "1") Integer page,
                        @RequestParam(value = "size", defaultValue = "10") Integer size) {
-        List<sotwoTopic> topicList = topicService.queryList(page, size);
+        List<SotwoTopic> topicList = topicService.queryList(page, size);
         int total = topicService.queryTotal();
         Map<String, Object> data = new HashMap();
         data.put("data", topicList);
@@ -67,7 +68,7 @@ public class WxTopicController {
             return ResponseUtil.badArgument();
         }
 
-        sotwoTopic topic = topicService.findById(id);
+        SotwoTopic topic = topicService.findById(id);
         return ResponseUtil.ok(topic);
     }
 
@@ -90,7 +91,7 @@ public class WxTopicController {
             return ResponseUtil.fail402();
         }
 
-        List<sotwoTopic> topicRelatedList = topicService.queryRelatedList(id, 0, 4);
+        List<SotwoTopic> topicRelatedList = topicService.queryRelatedList(id, 0, 4);
         return ResponseUtil.ok(topicRelatedList);
     }
 }

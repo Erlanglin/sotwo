@@ -1,12 +1,12 @@
 package org.myoranges.sotwo.wx.web;
 
 import org.apache.commons.lang3.ObjectUtils;
-import org.myoranges.sotwo.db.domain.sotwoCollect;
-import org.myoranges.sotwo.db.domain.sotwoGoods;
-import org.myoranges.sotwo.db.service.sotwoCollectService;
-import org.myoranges.sotwo.db.service.sotwoGoodsService;
 import org.myoranges.sotwo.core.util.JacksonUtil;
 import org.myoranges.sotwo.core.util.ResponseUtil;
+import org.myoranges.sotwo.db.domain.SotwoCollect;
+import org.myoranges.sotwo.db.domain.SotwoGoods;
+import org.myoranges.sotwo.db.service.SotwoCollectService;
+import org.myoranges.sotwo.db.service.SotwoGoodsService;
 import org.myoranges.sotwo.wx.annotation.LoginUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,9 +21,9 @@ import java.util.Map;
 @RequestMapping("/wx/collect")
 public class WxCollectController {
     @Autowired
-    private sotwoCollectService collectService;
+    private SotwoCollectService collectService;
     @Autowired
-    private sotwoGoodsService goodsService;
+    private SotwoGoodsService goodsService;
 
     /**
      * 用户收藏列表
@@ -57,18 +57,18 @@ public class WxCollectController {
             return ResponseUtil.badArgument();
         }
 
-        List<sotwoCollect> collectList = collectService.queryByType(userId, typeId, page, size);
+        List<SotwoCollect> collectList = collectService.queryByType(userId, typeId, page, size);
         int count = collectService.countByType(userId, typeId);
         int totalPages = (int) Math.ceil((double) count / size);
 
         List<Object> collects = new ArrayList<>(collectList.size());
-        for(sotwoCollect collect : collectList){
+        for(SotwoCollect collect : collectList){
             Map<String, Object> c = new HashMap();
             c.put("id", collect.getId());
             c.put("typeId", collect.getTypeId());
             c.put("valueId", collect.getValueId());
 
-            sotwoGoods goods = goodsService.findById(collect.getValueId());
+            SotwoGoods goods = goodsService.findById(collect.getValueId());
             c.put("name", goods.getName());
             c.put("goodsBrief", goods.getGoodsBrief());
             c.put("listPicUrl", goods.getListPicUrl());
@@ -115,7 +115,7 @@ public class WxCollectController {
             return ResponseUtil.badArgument();
         }
 
-        sotwoCollect collect = collectService.queryByTypeAndValue(userId, typeId, valueId);
+        SotwoCollect collect = collectService.queryByTypeAndValue(userId, typeId, valueId);
 
         String handleType = null;
         if(collect != null){
@@ -124,7 +124,7 @@ public class WxCollectController {
         }
         else{
             handleType = "add";
-            collect = new sotwoCollect();
+            collect = new SotwoCollect();
             collect.setUserId(userId);
             collect.setValueId(valueId);
             collect.setTypeId(typeId);

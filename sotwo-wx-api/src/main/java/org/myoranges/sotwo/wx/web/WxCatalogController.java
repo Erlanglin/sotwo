@@ -1,8 +1,9 @@
 package org.myoranges.sotwo.wx.web;
 
-import org.myoranges.sotwo.db.domain.sotwoCategory;
-import org.myoranges.sotwo.db.service.sotwoCategoryService;
+
 import org.myoranges.sotwo.core.util.ResponseUtil;
+import org.myoranges.sotwo.db.domain.SotwoCategory;
+import org.myoranges.sotwo.db.service.SotwoCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +18,7 @@ import java.util.Map;
 @RequestMapping("/wx/catalog")
 public class WxCatalogController {
     @Autowired
-    private sotwoCategoryService categoryService;
+    private SotwoCategoryService categoryService;
 
     /**
      * 分类栏目
@@ -47,10 +48,10 @@ public class WxCatalogController {
                         @RequestParam(value = "size", defaultValue = "10") Integer size) {
 
         // 所有一级分类目录
-        List<sotwoCategory> l1CatList = categoryService.queryL1();
+        List<SotwoCategory> l1CatList = categoryService.queryL1();
 
         // 当前一级分类目录
-        sotwoCategory currentCategory = null;
+        SotwoCategory currentCategory = null;
         if(id != null){
             currentCategory = categoryService.findById(id);
         }
@@ -59,7 +60,7 @@ public class WxCatalogController {
         }
 
         // 当前一级分类目录对应的二级分类目录
-        List<sotwoCategory> currentSubCategory = null;
+        List<SotwoCategory> currentSubCategory = null;
         if (null != currentCategory) {
             currentSubCategory = categoryService.queryByPid(currentCategory.getId());
         }
@@ -95,8 +96,8 @@ public class WxCatalogController {
         }
 
         // 当前分类
-        sotwoCategory currentCategory = categoryService.findById(id);
-        List<sotwoCategory> currentSubCategory = categoryService.queryByPid(currentCategory.getId());
+        SotwoCategory currentCategory = categoryService.findById(id);
+        List<SotwoCategory> currentSubCategory = categoryService.queryByPid(currentCategory.getId());
 
         Map<String, Object> data = new HashMap();
         data.put("currentCategory", currentCategory);

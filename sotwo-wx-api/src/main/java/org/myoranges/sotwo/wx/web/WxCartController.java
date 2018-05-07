@@ -3,10 +3,10 @@ package org.myoranges.sotwo.wx.web;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.myoranges.sotwo.db.domain.*;
-import org.myoranges.sotwo.db.service.*;
 import org.myoranges.sotwo.core.util.JacksonUtil;
 import org.myoranges.sotwo.core.util.ResponseUtil;
+import org.myoranges.sotwo.db.domain.*;
+import org.myoranges.sotwo.db.service.*;
 import org.myoranges.sotwo.wx.annotation.LoginUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -23,17 +23,17 @@ public class WxCartController {
     private final Log logger = LogFactory.getLog(WxCartController.class);
 
     @Autowired
-    private sotwoCartService cartService;
+    private SotwoCartService cartService;
     @Autowired
-    private sotwoGoodsService goodsService;
+    private SotwoGoodsService goodsService;
     @Autowired
-    private sotwoProductService productService;
+    private SotwoProductService productService;
     @Autowired
-    private sotwoGoodsSpecificationService goodsSpecificationService;
+    private SotwoGoodsSpecificationService goodsSpecificationService;
     @Autowired
-    private sotwoAddressService addressService;
+    private SotwoAddressService addressService;
     @Autowired
-    private sotwoCouponService apiCouponService;
+    private SotwoCouponService apiCouponService;
 
     /**
      * 购物车
@@ -57,13 +57,13 @@ public class WxCartController {
         if(userId == null){
             return ResponseUtil.unlogin();
         }
-        
-        List<sotwoCart> cartList = cartService.queryByUid(userId);
+
+        List<SotwoCart> cartList = cartService.queryByUid(userId);
         Integer goodsCount = 0;
         BigDecimal goodsAmount = new BigDecimal(0.00);
         Integer checkedGoodsCount = 0;
         BigDecimal checkedGoodsAmount = new BigDecimal(0.00);
-        for (sotwoCart cart : cartList) {
+        for (SotwoCart cart : cartList) {
             goodsCount += cart.getNumber();
             goodsAmount = goodsAmount.add(cart.getRetailPrice().multiply(new BigDecimal(cart.getNumber())));
             if (cart.getChecked()) {
@@ -101,14 +101,14 @@ public class WxCartController {
      *   失败则 { errno: XXX, errmsg: XXX }
      */
     @PostMapping("add")
-    public Object add(@LoginUser Integer userId, @RequestBody sotwoCart cart) {
+    public Object add(@LoginUser Integer userId, @RequestBody SotwoCart cart) {
         if(userId == null){
             return ResponseUtil.unlogin();
         }
         if(cart == null){
             return ResponseUtil.badArgument();
         }
-        
+
         Integer productId = cart.getProductId();
         Integer number = cart.getNumber().intValue();
         Integer goodsId = cart.getGoodsId();
@@ -117,14 +117,14 @@ public class WxCartController {
         }
 
         //判断商品是否可以购买
-        sotwoGoods goods = goodsService.findById(goodsId);
+        SotwoGoods goods = goodsService.findById(goodsId);
         if (goods == null || !goods.getIsOnSale()) {
             return ResponseUtil.fail(400, "商品已下架");
         }
 
-        sotwoProduct product = productService.findById(productId);
+        SotwoProduct product = productService.findById(productId);
         //判断购物车中是否存在此规格商品
-        sotwoCart existCart = cartService.queryExist(goodsId, productId, userId);
+        SotwoCart existCart = cartService.queryExist(goodsId, productId, userId);
         if(existCart == null){
             //取得规格的信息,判断规格库存
             if(product == null || number > product.getGoodsNumber() ){
@@ -134,7 +134,7 @@ public class WxCartController {
             Integer[] ids = product.getGoodsSpecificationIds();
             String goodsSpecificationValue = null;
             for(Integer id : ids){
-                sotwoGoodsSpecification goodsSpecification = goodsSpecificationService.findById(id);
+                SotwoGoodsSpecification goodsSpecification = goodsSpecificationService.findById(id);
                 if(goodsSpecification == null || !goodsSpecification.getGoodsId().equals(goodsId)){
                     return ResponseUtil.badArgument();
                 }
@@ -189,7 +189,7 @@ public class WxCartController {
      *   失败则 { errno: XXX, errmsg: XXX }
      */
     @PostMapping("fastadd")
-    public Object fastadd(@LoginUser Integer userId, @RequestBody sotwoCart cart) {
+    public Object fastadd(@LoginUser Integer userId, @RequestBody SotwoCart cart) {
         if(userId == null){
             return ResponseUtil.unlogin();
         }
@@ -205,14 +205,14 @@ public class WxCartController {
         }
 
         //判断商品是否可以购买
-        sotwoGoods goods = goodsService.findById(goodsId);
+        SotwoGoods goods = goodsService.findById(goodsId);
         if (goods == null || !goods.getIsOnSale()) {
             return ResponseUtil.fail(400, "商品已下架");
         }
 
-        sotwoProduct product = productService.findById(productId);
+        SotwoProduct product = productService.findById(productId);
         //判断购物车中是否存在此规格商品
-        sotwoCart existCart = cartService.queryExist(goodsId, productId, userId);
+        SotwoCart existCart = cartService.queryExist(goodsId, productId, userId);
         if(existCart == null){
             //取得规格的信息,判断规格库存
             if(product == null || number > product.getGoodsNumber() ){
@@ -222,7 +222,7 @@ public class WxCartController {
             Integer[] ids = product.getGoodsSpecificationIds();
             String goodsSpecificationValue = null;
             for(Integer id : ids){
-                sotwoGoodsSpecification goodsSpecification = goodsSpecificationService.findById(id);
+                SotwoGoodsSpecification goodsSpecification = goodsSpecificationService.findById(id);
                 if(goodsSpecification == null || !goodsSpecification.getGoodsId().equals(goodsId)){
                     return ResponseUtil.badArgument();
                 }
@@ -269,7 +269,7 @@ public class WxCartController {
      *   失败则 { errno: XXX, errmsg: XXX }
      */
     @PostMapping("update")
-    public Object update(@LoginUser Integer userId, @RequestBody sotwoCart cart) {
+    public Object update(@LoginUser Integer userId, @RequestBody SotwoCart cart) {
         if(userId == null){
             return ResponseUtil.unlogin();
         }
@@ -286,7 +286,7 @@ public class WxCartController {
 
         //判断是否存在该订单
         // 如果不存在，直接返回错误
-        sotwoCart existCart = cartService.findById(id);
+        SotwoCart existCart = cartService.findById(id);
         if(existCart == null){
             return ResponseUtil.badArgumentValue();
         }
@@ -300,13 +300,13 @@ public class WxCartController {
         }
 
         //判断商品是否可以购买
-        sotwoGoods goods = goodsService.findById(goodsId);
+        SotwoGoods goods = goodsService.findById(goodsId);
         if (goods == null || !goods.getIsOnSale()) {
             return ResponseUtil.fail(403, "商品已下架");
         }
 
         //取得规格的信息,判断规格库存
-        sotwoProduct product = productService.findById(productId);
+        SotwoProduct product = productService.findById(productId);
         if(product == null || product.getGoodsNumber() < number){
             return ResponseUtil.fail(403, "库存不足");
         }
@@ -339,7 +339,7 @@ public class WxCartController {
         if(body == null){
             return ResponseUtil.badArgument();
         }
-        
+
         List<Integer> productIds = JacksonUtil.parseIntegerList(body, "productIds");
         if(productIds == null){
             return ResponseUtil.badArgument();
@@ -378,7 +378,7 @@ public class WxCartController {
         if(body == null){
             return ResponseUtil.badArgument();
         }
-        
+
         List<Integer> productIds = JacksonUtil.parseIntegerList(body, "productIds");
 
         if(productIds == null){
@@ -408,10 +408,10 @@ public class WxCartController {
         if(userId == null){
             return ResponseUtil.ok(0);
         }
-        
+
         int goodsCount = 0;
-        List<sotwoCart> cartList = cartService.queryByUid(userId);
-        for(sotwoCart cart : cartList){
+        List<SotwoCart> cartList = cartService.queryByUid(userId);
+        for(SotwoCart cart : cartList){
             goodsCount += cart.getNumber();
         }
 
@@ -457,13 +457,13 @@ public class WxCartController {
         }
 
         // 收货地址
-        sotwoAddress checkedAddress = null;
+        SotwoAddress checkedAddress = null;
         if(addressId == null || addressId.equals(0)){
             checkedAddress = addressService.findDefault(userId);
             // 如果仍然没有地址，则是没有收获地址
             // 返回一个空的地址id=0，这样前端则会提醒添加地址
             if(checkedAddress == null){
-                checkedAddress = new sotwoAddress();
+                checkedAddress = new SotwoAddress();
                 checkedAddress.setId(0);
                 addressId = 0;
             }
@@ -485,12 +485,12 @@ public class WxCartController {
         BigDecimal couponPrice = new BigDecimal(0.00);
 
         // 商品价格
-        List<sotwoCart> checkedGoodsList = null;
+        List<SotwoCart> checkedGoodsList = null;
         if(cartId == null || cartId.equals(0)) {
             checkedGoodsList = cartService.queryByUidAndChecked(userId);
         }
         else {
-            sotwoCart cart = cartService.findById(cartId);
+            SotwoCart cart = cartService.findById(cartId);
             if (cart == null){
                 return ResponseUtil.badArgumentValue();
             }
@@ -498,7 +498,7 @@ public class WxCartController {
             checkedGoodsList.add(cart);
         }
         BigDecimal checkedGoodsPrice = new BigDecimal(0.00);
-        for (sotwoCart cart : checkedGoodsList) {
+        for (SotwoCart cart : checkedGoodsList) {
             checkedGoodsPrice = checkedGoodsPrice.add(cart.getRetailPrice().multiply(new BigDecimal(cart.getNumber())));
         }
 

@@ -2,8 +2,8 @@ package org.myoranges.sotwo.db.service;
 
 import com.github.pagehelper.PageHelper;
 import org.myoranges.sotwo.db.dao.*;
-import org.myoranges.sotwo.db.domain.sotwoRegion;
-import org.myoranges.sotwo.db.domain.sotwoRegionExample;
+import org.myoranges.sotwo.db.domain.SotwoRegion;
+import org.myoranges.sotwo.db.domain.SotwoRegionExample;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -11,7 +11,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @Service
-public class sotwoRegionService {
+public class SotwoRegionService {
     @Resource
     private SotwoRegionMapper regionMapper;
     @Resource
@@ -23,19 +23,19 @@ public class sotwoRegionService {
     @Resource
     private SotwoRegionStreetMapper streetMapper;
 
-    public List<sotwoRegion> queryByPid(Integer parentId) {
-        sotwoRegionExample example = new sotwoRegionExample();
+    public List<SotwoRegion> queryByPid(Integer parentId) {
+        SotwoRegionExample example = new SotwoRegionExample();
         example.or().andPidEqualTo(parentId);
         return regionMapper.selectByExample(example);
     }
 
-    public sotwoRegion findById(Integer id) {
+    public SotwoRegion findById(Integer id) {
         return regionMapper.selectByPrimaryKey(id);
     }
 
-    public List<sotwoRegion> querySelective(String name, Integer code, Integer page, Integer size, String sort, String order) {
-        sotwoRegionExample example = new sotwoRegionExample();
-        sotwoRegionExample.Criteria criteria = example.createCriteria();
+    public List<SotwoRegion> querySelective(String name, Integer code, Integer page, Integer size, String sort, String order) {
+        SotwoRegionExample example = new SotwoRegionExample();
+        SotwoRegionExample.Criteria criteria = example.createCriteria();
 
         if(!StringUtils.isEmpty(name)){
             criteria.andNameLike("%" + name + "%");
@@ -48,8 +48,8 @@ public class sotwoRegionService {
     }
 
     public int countSelective(String name, Integer code, Integer page, Integer size, String sort, String order) {
-        sotwoRegionExample example = new sotwoRegionExample();
-        sotwoRegionExample.Criteria criteria = example.createCriteria();
+        SotwoRegionExample example = new SotwoRegionExample();
+        SotwoRegionExample.Criteria criteria = example.createCriteria();
 
         if(!StringUtils.isEmpty(name)){
             criteria.andNameLike("%" + name + "%");

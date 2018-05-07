@@ -2,8 +2,8 @@ package org.myoranges.sotwo.db.service;
 
 import com.github.pagehelper.PageHelper;
 import org.myoranges.sotwo.db.dao.SotwoSearchHistoryMapper;
-import org.myoranges.sotwo.db.domain.sotwoSearchHistory;
-import org.myoranges.sotwo.db.domain.sotwoSearchHistoryExample;
+import org.myoranges.sotwo.db.domain.SotwoSearchHistory;
+import org.myoranges.sotwo.db.domain.SotwoSearchHistoryExample;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -11,31 +11,31 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @Service
-public class sotwoSearchHistoryService {
+public class SotwoSearchHistoryService {
     @Resource
     private SotwoSearchHistoryMapper searchHistoryMapper;
 
-    public void save(sotwoSearchHistory searchHistory) {
+    public void save(SotwoSearchHistory searchHistory) {
         searchHistoryMapper.insertSelective(searchHistory);
     }
 
-    public List<sotwoSearchHistory> queryByUid(int uid) {
-        sotwoSearchHistoryExample example = new sotwoSearchHistoryExample();
+    public List<SotwoSearchHistory> queryByUid(int uid) {
+        SotwoSearchHistoryExample example = new SotwoSearchHistoryExample();
         example.or().andUserIdEqualTo(uid).andDeletedEqualTo(false);
         example.setDistinct(true);
-        return searchHistoryMapper.selectByExampleSelective(example, sotwoSearchHistory.Column.keyword);
+        return searchHistoryMapper.selectByExampleSelective(example, SotwoSearchHistory.Column.keyword);
     }
 
     public void deleteByUid(int uid) {
-        sotwoSearchHistoryExample example = new sotwoSearchHistoryExample();
+        SotwoSearchHistoryExample example = new SotwoSearchHistoryExample();
         example.or().andUserIdEqualTo(uid);
-        sotwoSearchHistory searchHistory = new sotwoSearchHistory();
+        SotwoSearchHistory searchHistory = new SotwoSearchHistory();
         searchHistory.setDeleted(true);
         searchHistoryMapper.updateByExampleSelective(searchHistory, example);
     }
 
     public void deleteById(Integer id) {
-        sotwoSearchHistory searchHistory = searchHistoryMapper.selectByPrimaryKey(id);
+        SotwoSearchHistory searchHistory = searchHistoryMapper.selectByPrimaryKey(id);
         if(searchHistory == null){
             return;
         }
@@ -43,13 +43,13 @@ public class sotwoSearchHistoryService {
         searchHistoryMapper.updateByPrimaryKey(searchHistory);
     }
 
-    public void add(sotwoSearchHistory searchHistory) {
+    public void add(SotwoSearchHistory searchHistory) {
         searchHistoryMapper.insertSelective(searchHistory);
     }
 
-    public List<sotwoSearchHistory> querySelective(String userId, String keyword, Integer page, Integer size, String sort, String order) {
-        sotwoSearchHistoryExample example = new sotwoSearchHistoryExample();
-        sotwoSearchHistoryExample.Criteria criteria = example.createCriteria();
+    public List<SotwoSearchHistory> querySelective(String userId, String keyword, Integer page, Integer size, String sort, String order) {
+        SotwoSearchHistoryExample example = new SotwoSearchHistoryExample();
+        SotwoSearchHistoryExample.Criteria criteria = example.createCriteria();
 
         if(!StringUtils.isEmpty(userId)){
             criteria.andUserIdEqualTo(Integer.valueOf(userId));
@@ -64,8 +64,8 @@ public class sotwoSearchHistoryService {
     }
 
     public int countSelective(String userId, String keyword, Integer page, Integer size, String sort, String order) {
-        sotwoSearchHistoryExample example = new sotwoSearchHistoryExample();
-        sotwoSearchHistoryExample.Criteria criteria = example.createCriteria();
+        SotwoSearchHistoryExample example = new SotwoSearchHistoryExample();
+        SotwoSearchHistoryExample.Criteria criteria = example.createCriteria();
 
         if(!StringUtils.isEmpty(userId)){
             criteria.andUserIdEqualTo(Integer.valueOf(userId));
@@ -78,11 +78,11 @@ public class sotwoSearchHistoryService {
         return (int)searchHistoryMapper.countByExample(example);
     }
 
-    public void updateById(sotwoSearchHistory collect) {
+    public void updateById(SotwoSearchHistory collect) {
         searchHistoryMapper.updateByPrimaryKeySelective(collect);
     }
 
-    public sotwoSearchHistory findById(Integer id) {
+    public SotwoSearchHistory findById(Integer id) {
         return searchHistoryMapper.selectByPrimaryKey(id);
     }
 }

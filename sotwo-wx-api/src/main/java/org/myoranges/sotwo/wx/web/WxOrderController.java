@@ -9,12 +9,12 @@ import com.github.binarywang.wxpay.service.WxPayService;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.myoranges.sotwo.core.util.JacksonUtil;
+import org.myoranges.sotwo.core.util.ResponseUtil;
 import org.myoranges.sotwo.db.domain.*;
 import org.myoranges.sotwo.db.service.*;
 import org.myoranges.sotwo.db.util.OrderHandleOption;
 import org.myoranges.sotwo.db.util.OrderUtil;
-import org.myoranges.sotwo.core.util.JacksonUtil;
-import org.myoranges.sotwo.core.util.ResponseUtil;
 import org.myoranges.sotwo.wx.annotation.LoginUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -62,19 +62,19 @@ public class WxOrderController {
     private PlatformTransactionManager txManager;
 
     @Autowired
-    private sotwoUserService userService;
+    private SotwoUserService userService;
     @Autowired
-    private sotwoOrderService orderService;
+    private SotwoOrderService orderService;
     @Autowired
-    private sotwoOrderGoodsService orderGoodsService;
+    private SotwoOrderGoodsService orderGoodsService;
     @Autowired
-    private sotwoAddressService addressService;
+    private SotwoAddressService addressService;
     @Autowired
-    private sotwoCartService cartService;
+    private SotwoCartService cartService;
     @Autowired
-    private sotwoRegionService regionService;
+    private SotwoRegionService regionService;
     @Autowired
-    private sotwoProductService productService;
+    private SotwoProductService productService;
 
     @Autowired
     private WxPayService wxPayService;
@@ -82,15 +82,15 @@ public class WxOrderController {
     public WxOrderController() {
     }
 
-    private String detailedAddress(sotwoAddress sotwoAddress) {
-        Integer provinceId = sotwoAddress.getProvinceId();
-        Integer cityId = sotwoAddress.getCityId();
-        Integer areaId = sotwoAddress.getAreaId();
+    private String detailedAddress(SotwoAddress SotwoAddress) {
+        Integer provinceId = SotwoAddress.getProvinceId();
+        Integer cityId = SotwoAddress.getCityId();
+        Integer areaId = SotwoAddress.getAreaId();
         String provinceName = regionService.findById(provinceId).getName();
         String cityName = regionService.findById(cityId).getName();
         String areaName = regionService.findById(areaId).getName();
         String fullRegion = provinceName + " " + cityName + " " + areaName;
-        return fullRegion + " " + sotwoAddress.getAddress();
+        return fullRegion + " " + SotwoAddress.getAddress();
     }
 
     /**
@@ -130,11 +130,11 @@ public class WxOrderController {
         }
 
         List<Short> orderStatus = OrderUtil.orderStatus(showType);
-        List<sotwoOrder> orderList = orderService.queryByOrderStatus(userId, orderStatus);
+        List<SotwoOrder> orderList = orderService.queryByOrderStatus(userId, orderStatus);
         int count = orderService.countByOrderStatus(userId, orderStatus);
 
         List<Map<String, Object>> orderVoList = new ArrayList<>(orderList.size());
-        for (sotwoOrder order : orderList) {
+        for (SotwoOrder order : orderList) {
             Map<String, Object> orderVo = new HashMap<>();
             orderVo.put("id", order.getId());
             orderVo.put("orderSn", order.getOrderSn());
@@ -142,9 +142,9 @@ public class WxOrderController {
             orderVo.put("orderStatusText", OrderUtil.orderStatusText(order));
             orderVo.put("handleOption", OrderUtil.build(order));
 
-            List<sotwoOrderGoods> orderGoodsList = orderGoodsService.queryByOid(order.getId());
+            List<SotwoOrderGoods> orderGoodsList = orderGoodsService.queryByOid(order.getId());
             List<Map<String, Object>> orderGoodsVoList = new ArrayList<>(orderGoodsList.size());
-            for (sotwoOrderGoods orderGoods : orderGoodsList) {
+            for (SotwoOrderGoods orderGoods : orderGoodsList) {
                 Map<String, Object> orderGoodsVo = new HashMap<>();
                 orderGoodsVo.put("id", orderGoods.getId());
                 orderGoodsVo.put("goodsName", orderGoods.getGoodsName());
@@ -191,7 +191,7 @@ public class WxOrderController {
         }
 
         // 订单信息
-        sotwoOrder order = orderService.findById(orderId);
+        SotwoOrder order = orderService.findById(orderId);
         if (null == order) {
             return ResponseUtil.fail(403, "订单不存在");
         }
@@ -211,9 +211,9 @@ public class WxOrderController {
         orderVo.put("orderStatusText", OrderUtil.orderStatusText(order));
         orderVo.put("handleOption", OrderUtil.build(order));
 
-        List<sotwoOrderGoods> orderGoodsList = orderGoodsService.queryByOid(order.getId());
+        List<SotwoOrderGoods> orderGoodsList = orderGoodsService.queryByOid(order.getId());
         List<Map<String, Object>> orderGoodsVoList = new ArrayList<>(orderGoodsList.size());
-        for (sotwoOrderGoods orderGoods : orderGoodsList) {
+        for (SotwoOrderGoods orderGoods : orderGoodsList) {
             Map<String, Object> orderGoodsVo = new HashMap<>();
             orderGoodsVo.put("id", orderGoods.getId());
             orderGoodsVo.put("orderId", orderGoods.getOrderId());
@@ -262,18 +262,18 @@ public class WxOrderController {
         }
 
         // 收货地址
-        sotwoAddress checkedAddress = addressService.findById(addressId);
+        SotwoAddress checkedAddress = addressService.findById(addressId);
 
         // 获取可用的优惠券信息
         // 使用优惠券减免的金额
         BigDecimal couponPrice = new BigDecimal(0.00);
 
         // 货品价格
-        List<sotwoCart> checkedGoodsList = null;
+        List<SotwoCart> checkedGoodsList = null;
         if (cartId.equals(0)) {
             checkedGoodsList = cartService.queryByUidAndChecked(userId);
         } else {
-            sotwoCart cart = cartService.findById(cartId);
+            SotwoCart cart = cartService.findById(cartId);
             checkedGoodsList = new ArrayList<>(1);
             checkedGoodsList.add(cart);
         }
@@ -281,7 +281,7 @@ public class WxOrderController {
             return ResponseUtil.badArgumentValue();
         }
         BigDecimal checkedGoodsPrice = new BigDecimal(0.00);
-        for (sotwoCart checkGoods : checkedGoodsList) {
+        for (SotwoCart checkGoods : checkedGoodsList) {
             checkedGoodsPrice = checkedGoodsPrice.add(checkGoods.getRetailPrice().multiply(new BigDecimal(checkGoods.getNumber())));
         }
 
@@ -304,10 +304,10 @@ public class WxOrderController {
         def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
         TransactionStatus status = txManager.getTransaction(def);
         Integer orderId = null;
-        sotwoOrder order = null;
+        SotwoOrder order = null;
         try {
             // 订单
-            order = new sotwoOrder();
+            order = new SotwoOrder();
             order.setUserId(userId);
             order.setOrderSn(orderService.generateOrderSn(userId));
             order.setAddTime(LocalDateTime.now());
@@ -326,9 +326,9 @@ public class WxOrderController {
             orderService.add(order);
             orderId = order.getId();
 
-            for (sotwoCart cartGoods : checkedGoodsList) {
+            for (SotwoCart cartGoods : checkedGoodsList) {
                 // 订单商品
-                sotwoOrderGoods orderGoods = new sotwoOrderGoods();
+                SotwoOrderGoods orderGoods = new SotwoOrderGoods();
                 orderGoods.setOrderId(order.getId());
                 orderGoods.setGoodsId(cartGoods.getGoodsId());
                 orderGoods.setGoodsSn(cartGoods.getGoodsSn());
@@ -348,9 +348,9 @@ public class WxOrderController {
             cartService.clearGoods(userId);
 
             // 商品货品数量减少
-            for (sotwoCart checkGoods : checkedGoodsList) {
+            for (SotwoCart checkGoods : checkedGoodsList) {
                 Integer productId = checkGoods.getProductId();
-                sotwoProduct product = productService.findById(productId);
+                SotwoProduct product = productService.findById(productId);
 
                 Integer remainNumber = product.getGoodsNumber() - checkGoods.getNumber();
                 if (remainNumber < 0) {
@@ -393,7 +393,7 @@ public class WxOrderController {
             return ResponseUtil.badArgument();
         }
 
-        sotwoOrder order = orderService.findById(orderId);
+        SotwoOrder order = orderService.findById(orderId);
         if (order == null) {
             return ResponseUtil.badArgumentValue();
         }
@@ -418,10 +418,10 @@ public class WxOrderController {
             orderService.update(order);
 
             // 商品货品数量增加
-            List<sotwoOrderGoods> orderGoodsList = orderGoodsService.queryByOid(orderId);
-            for (sotwoOrderGoods orderGoods : orderGoodsList) {
+            List<SotwoOrderGoods> orderGoodsList = orderGoodsService.queryByOid(orderId);
+            for (SotwoOrderGoods orderGoods : orderGoodsList) {
                 Integer productId = orderGoods.getProductId();
-                sotwoProduct product = productService.findById(productId);
+                SotwoProduct product = productService.findById(productId);
                 Integer number = product.getGoodsNumber() + orderGoods.getNumber();
                 product.setGoodsNumber(number);
                 productService.updateById(product);
@@ -459,7 +459,7 @@ public class WxOrderController {
             return ResponseUtil.badArgument();
         }
 
-        sotwoOrder order = orderService.findById(orderId);
+        SotwoOrder order = orderService.findById(orderId);
         if (order == null) {
             return ResponseUtil.badArgumentValue();
         }
@@ -473,7 +473,7 @@ public class WxOrderController {
             return ResponseUtil.fail(403, "订单不能支付");
         }
 
-        sotwoUser user = userService.findById(userId);
+        SotwoUser user = userService.findById(userId);
         String openid = user.getWeixinOpenid();
         if(openid == null){
             return ResponseUtil.fail(403, "订单不能支付");
@@ -484,7 +484,7 @@ public class WxOrderController {
             orderRequest.setOutTradeNo(order.getOrderSn());
             orderRequest.setOpenid(openid);
             // TODO 更有意义的显示名称
-            orderRequest.setBody("sotwo小商场-订单测试支付");
+            orderRequest.setBody("Sotwo小商场-订单测试支付");
             // 元转成分
             // 这里仅支付1分
             // TODO 这里1分钱需要改成实际订单金额
@@ -527,7 +527,7 @@ public class WxOrderController {
             // 分转化成元
             String totalFee = BaseWxPayResult.feeToYuan(result.getTotalFee());
 
-            sotwoOrder order = orderService.findBySn(orderSn);
+            SotwoOrder order = orderService.findBySn(orderSn);
             if(order == null){
                 throw new Exception("订单不存在 sn=" + orderSn);
             }
@@ -579,7 +579,7 @@ public class WxOrderController {
             return ResponseUtil.badArgument();
         }
 
-        sotwoOrder order = orderService.findById(orderId);
+        SotwoOrder order = orderService.findById(orderId);
         if (order == null) {
             return ResponseUtil.badArgument();
         }
@@ -604,10 +604,10 @@ public class WxOrderController {
             // 退款操作
 
             // 商品货品数量增加
-            List<sotwoOrderGoods> orderGoodsList = orderGoodsService.queryByOid(orderId);
-            for (sotwoOrderGoods orderGoods : orderGoodsList) {
+            List<SotwoOrderGoods> orderGoodsList = orderGoodsService.queryByOid(orderId);
+            for (SotwoOrderGoods orderGoods : orderGoodsList) {
                 Integer productId = orderGoods.getProductId();
-                sotwoProduct product = productService.findById(productId);
+                SotwoProduct product = productService.findById(productId);
                 Integer number = product.getGoodsNumber() + orderGoods.getNumber();
                 product.setGoodsNumber(number);
                 productService.updateById(product);
@@ -645,7 +645,7 @@ public class WxOrderController {
             return ResponseUtil.badArgument();
         }
 
-        sotwoOrder order = orderService.findById(orderId);
+        SotwoOrder order = orderService.findById(orderId);
         if (order == null) {
             return ResponseUtil.badArgument();
         }
@@ -688,7 +688,7 @@ public class WxOrderController {
             return ResponseUtil.badArgument();
         }
 
-        sotwoOrder order = orderService.findById(orderId);
+        SotwoOrder order = orderService.findById(orderId);
         if (order == null) {
             return ResponseUtil.badArgument();
         }
@@ -728,7 +728,7 @@ public class WxOrderController {
             return ResponseUtil.badArgument();
         }
 
-        sotwoOrder order = orderService.findById(orderId);
+        SotwoOrder order = orderService.findById(orderId);
         if (order == null) {
             return ResponseUtil.badArgument();
         }
@@ -767,7 +767,7 @@ public class WxOrderController {
             return ResponseUtil.badArgument();
         }
 
-        List<sotwoOrderGoods> orderGoodsList = orderGoodsService.findByOidAndGid(orderId, goodsId);
+        List<SotwoOrderGoods> orderGoodsList = orderGoodsService.findByOidAndGid(orderId, goodsId);
         int size = orderGoodsList.size();
 
         Assert.state(size < 2, "存在多个符合条件的订单商品");
@@ -776,7 +776,7 @@ public class WxOrderController {
             return ResponseUtil.badArgumentValue();
         }
 
-        sotwoOrderGoods orderGoods = orderGoodsList.get(0);
+        SotwoOrderGoods orderGoods = orderGoodsList.get(0);
         return ResponseUtil.ok(orderGoods);
     }
 
@@ -794,8 +794,8 @@ public class WxOrderController {
     public void checkOrderUnpaid() {
         logger.debug(LocalDateTime.now());
 
-        List<sotwoOrder> orderList = orderService.queryUnpaid();
-        for(sotwoOrder order : orderList){
+        List<SotwoOrder> orderList = orderService.queryUnpaid();
+        for(SotwoOrder order : orderList){
             LocalDateTime add = order.getAddTime();
             LocalDateTime now = LocalDateTime.now();
             LocalDateTime expired = add.plusMinutes(30);
@@ -815,10 +815,10 @@ public class WxOrderController {
 
                 // 商品货品数量增加
                 Integer orderId = order.getId();
-                List<sotwoOrderGoods> orderGoodsList = orderGoodsService.queryByOid(orderId);
-                for (sotwoOrderGoods orderGoods : orderGoodsList) {
+                List<SotwoOrderGoods> orderGoodsList = orderGoodsService.queryByOid(orderId);
+                for (SotwoOrderGoods orderGoods : orderGoodsList) {
                     Integer productId = orderGoods.getProductId();
-                    sotwoProduct product = productService.findById(productId);
+                    SotwoProduct product = productService.findById(productId);
                     Integer number = product.getGoodsNumber() + orderGoods.getNumber();
                     product.setGoodsNumber(number);
                     productService.updateById(product);
@@ -852,8 +852,8 @@ public class WxOrderController {
     public void checkOrderUnconfirm() {
         logger.debug(LocalDateTime.now());
 
-        List<sotwoOrder> orderList = orderService.queryUnconfirm();
-        for(sotwoOrder order : orderList){
+        List<SotwoOrder> orderList = orderService.queryUnconfirm();
+        for(SotwoOrder order : orderList){
             LocalDateTime shipEnd = order.getShipEndTime();
             LocalDateTime now = LocalDateTime.now();
             LocalDateTime expired = shipEnd.plusDays(7);

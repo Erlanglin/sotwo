@@ -1,11 +1,12 @@
 package org.myoranges.sotwo.os.web;
 
+
 import org.myoranges.sotwo.core.util.CharUtil;
 import org.myoranges.sotwo.core.util.ResponseUtil;
-import org.myoranges.sotwo.db.domain.sotwoStorage;
-import org.myoranges.sotwo.db.service.sotwoStorageService;
-import org.myoranges.sotwo.os.service.StorageService;
+import org.myoranges.sotwo.db.domain.SotwoStorage;
+import org.myoranges.sotwo.db.service.SotwoStorageService;
 import org.myoranges.sotwo.os.config.ObjectStorageConfig;
+import org.myoranges.sotwo.os.service.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -28,7 +29,7 @@ public class OsStorageController {
     @Autowired
     private StorageService storageService;
     @Autowired
-    private sotwoStorageService sotwoStorageService;
+    private SotwoStorageService sotwoStorageService;
 
     @Autowired
     private ObjectStorageConfig osConfig;
@@ -42,7 +43,7 @@ public class OsStorageController {
         String suffix = originalFilename.substring(index);
 
         String key = null;
-        sotwoStorage storageInfo = null;
+        SotwoStorage storageInfo = null;
 
         do{
             key = CharUtil.getRandomString(20) + suffix;
@@ -58,7 +59,7 @@ public class OsStorageController {
                        @RequestParam(value = "page", defaultValue = "1") Integer page,
                        @RequestParam(value = "limit", defaultValue = "10") Integer limit,
                        String sort, String order){
-        List<sotwoStorage> storageList = sotwoStorageService.querySelective(key, name, page, limit, sort, order);
+        List<SotwoStorage> storageList = sotwoStorageService.querySelective(key, name, page, limit, sort, order);
         int total = sotwoStorageService.countSelective(key, name, page, limit, sort, order);
         Map<String, Object> data = new HashMap<>();
         data.put("total", total);
@@ -81,7 +82,7 @@ public class OsStorageController {
         storageService.store(inputStream, key);
 
         String url = generateUrl(key);
-        sotwoStorage storageInfo = new sotwoStorage();
+        SotwoStorage storageInfo = new SotwoStorage();
         storageInfo.setName(originalFilename);
         storageInfo.setSize((int)file.getSize());
         storageInfo.setType(file.getContentType());
@@ -98,7 +99,7 @@ public class OsStorageController {
         if(id == null){
             return ResponseUtil.badArgument();
         }
-        sotwoStorage storageInfo = sotwoStorageService.findById(id);
+        SotwoStorage storageInfo = sotwoStorageService.findById(id);
         if(storageInfo == null){
             return ResponseUtil.badArgumentValue();
         }
@@ -106,22 +107,22 @@ public class OsStorageController {
     }
 
     @PostMapping("/update")
-    public Object update(@RequestBody sotwoStorage sotwoStorage) {
+    public Object update(@RequestBody SotwoStorage SotwoStorage) {
 
-        sotwoStorageService.update(sotwoStorage);
-        return ResponseUtil.ok(sotwoStorage);
+        sotwoStorageService.update(SotwoStorage);
+        return ResponseUtil.ok(SotwoStorage);
     }
 
     @PostMapping("/delete")
-    public Object delete(@RequestBody sotwoStorage sotwoStorage) {
-        sotwoStorageService.deleteByKey(sotwoStorage.getKey());
-        storageService.delete(sotwoStorage.getKey());
+    public Object delete(@RequestBody SotwoStorage SotwoStorage) {
+        sotwoStorageService.deleteByKey(SotwoStorage.getKey());
+        storageService.delete(SotwoStorage.getKey());
         return ResponseUtil.ok();
     }
 
     @GetMapping("/fetch/{key:.+}")
     public ResponseEntity<Resource> fetch(@PathVariable String key) {
-        sotwoStorage sotwoStorage = sotwoStorageService.findByKey(key);
+        SotwoStorage sotwoStorage = sotwoStorageService.findByKey(key);
         if(key == null){
             ResponseEntity.notFound();
         }
@@ -137,11 +138,11 @@ public class OsStorageController {
 
     @GetMapping("/download/{key:.+}")
     public ResponseEntity<Resource> download(@PathVariable String key) {
-        sotwoStorage sotwoStorage = sotwoStorageService.findByKey(key);
+        SotwoStorage SotwoStorage = sotwoStorageService.findByKey(key);
         if(key == null){
             ResponseEntity.notFound();
         }
-        String type = sotwoStorage.getType();
+        String type = SotwoStorage.getType();
         MediaType mediaType = MediaType.parseMediaType(type);
 
         Resource file = storageService.loadAsResource(key);

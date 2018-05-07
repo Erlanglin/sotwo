@@ -3,10 +3,10 @@ package org.myoranges.sotwo.admin.web;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.myoranges.sotwo.admin.annotation.LoginAdmin;
-import org.myoranges.sotwo.db.domain.sotwoOrder;
-import org.myoranges.sotwo.db.service.sotwoOrderService;
-import org.myoranges.sotwo.db.util.OrderUtil;
 import org.myoranges.sotwo.core.util.ResponseUtil;
+import org.myoranges.sotwo.db.domain.SotwoOrder;
+import org.myoranges.sotwo.db.service.SotwoOrderService;
+import org.myoranges.sotwo.db.util.OrderUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +20,7 @@ public class OrderController {
     private final Log logger = LogFactory.getLog(OrderController.class);
 
     @Autowired
-    private sotwoOrderService orderService;
+    private SotwoOrderService orderService;
 
     @GetMapping("/list")
     public Object list(@LoginAdmin Integer adminId,
@@ -31,7 +31,7 @@ public class OrderController {
         if(adminId == null){
             return ResponseUtil.fail401();
         }
-        List<sotwoOrder> orderList = orderService.querySelective(userId, orderSn, page, limit, sort, order);
+        List<SotwoOrder> orderList = orderService.querySelective(userId, orderSn, page, limit, sort, order);
         int total = orderService.countSelective(userId, orderSn, page, limit, sort, order);
 
         Map<String, Object> data = new HashMap<>();
@@ -45,7 +45,7 @@ public class OrderController {
      * 目前的逻辑不支持管理员创建
      */
     @PostMapping("/create")
-    public Object create(@LoginAdmin Integer adminId, @RequestBody sotwoOrder order){
+    public Object create(@LoginAdmin Integer adminId, @RequestBody SotwoOrder order){
         if(adminId == null){
             return ResponseUtil.unlogin();
         }
@@ -58,7 +58,7 @@ public class OrderController {
             return ResponseUtil.fail401();
         }
 
-        sotwoOrder order = orderService.findById(id);
+        SotwoOrder order = orderService.findById(id);
         return ResponseUtil.ok(order);
     }
 
@@ -66,7 +66,7 @@ public class OrderController {
      * 目前仅仅支持管理员设置发货相关的信息
      */
     @PostMapping("/update")
-    public Object update(@LoginAdmin Integer adminId, @RequestBody sotwoOrder order){
+    public Object update(@LoginAdmin Integer adminId, @RequestBody SotwoOrder order){
         if(adminId == null){
             return ResponseUtil.unlogin();
         }
@@ -76,13 +76,13 @@ public class OrderController {
             return ResponseUtil.badArgument();
         }
 
-        sotwoOrder sotwoOrder = orderService.findById(orderId);
-        if(sotwoOrder == null){
+        SotwoOrder SotwoOrder = orderService.findById(orderId);
+        if(SotwoOrder == null){
             return ResponseUtil.badArgumentValue();
         }
 
-        if(OrderUtil.isPayStatus(sotwoOrder) || OrderUtil.isShipStatus(sotwoOrder)){
-            sotwoOrder newOrder = new sotwoOrder();
+        if(OrderUtil.isPayStatus(SotwoOrder) || OrderUtil.isShipStatus(SotwoOrder)){
+            SotwoOrder newOrder = new SotwoOrder();
             newOrder.setId(orderId);
             newOrder.setShipChannel(order.getShipChannel());
             newOrder.setShipSn(order.getOrderSn());
@@ -95,12 +95,12 @@ public class OrderController {
             return ResponseUtil.badArgumentValue();
         }
 
-        sotwoOrder = orderService.findById(orderId);
-        return ResponseUtil.ok(sotwoOrder);
+        SotwoOrder = orderService.findById(orderId);
+        return ResponseUtil.ok(SotwoOrder);
     }
 
     @PostMapping("/delete")
-    public Object delete(@LoginAdmin Integer adminId, @RequestBody sotwoOrder order){
+    public Object delete(@LoginAdmin Integer adminId, @RequestBody SotwoOrder order){
         if(adminId == null){
             return ResponseUtil.unlogin();
         }

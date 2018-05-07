@@ -1,6 +1,6 @@
 package org.myoranges.sotwo.db.util;
 
-import org.myoranges.sotwo.db.domain.sotwoOrder;
+import org.myoranges.sotwo.db.domain.SotwoOrder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +33,7 @@ public class OrderUtil {
     public static final Short STATUS_AUTO_CONFIRM = 402;
 
 
-    public static String orderStatusText(sotwoOrder order) {
+    public static String orderStatusText(SotwoOrder order) {
         int status = order.getOrderStatus().intValue();
 
         if (status == 101) {
@@ -73,7 +73,7 @@ public class OrderUtil {
     }
 
 
-    public static OrderHandleOption build(sotwoOrder order){
+    public static OrderHandleOption build(SotwoOrder order){
         int status = order.getOrderStatus().intValue();
         OrderHandleOption handleOption = new OrderHandleOption();
 
@@ -147,11 +147,11 @@ public class OrderUtil {
     }
 
 
-    public static boolean isPayStatus(sotwoOrder sotwoOrder) {
-        return OrderUtil.STATUS_PAY == sotwoOrder.getOrderStatus().shortValue();
+    public static boolean isPayStatus(SotwoOrder SotwoOrder) {
+        return OrderUtil.STATUS_PAY == SotwoOrder.getOrderStatus().shortValue();
     }
 
-    public static boolean isShipStatus(sotwoOrder sotwoOrder) {
-        return OrderUtil.STATUS_SHIP == sotwoOrder.getOrderStatus().shortValue();
+    public static boolean isShipStatus(SotwoOrder SotwoOrder) {
+        return OrderUtil.STATUS_SHIP == SotwoOrder.getOrderStatus().shortValue();
     }
 }

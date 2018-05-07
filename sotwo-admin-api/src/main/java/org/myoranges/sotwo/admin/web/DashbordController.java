@@ -3,11 +3,11 @@ package org.myoranges.sotwo.admin.web;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.myoranges.sotwo.admin.annotation.LoginAdmin;
-import org.myoranges.sotwo.db.service.sotwoGoodsService;
-import org.myoranges.sotwo.db.service.sotwoOrderService;
-import org.myoranges.sotwo.db.service.sotwoProductService;
-import org.myoranges.sotwo.db.service.sotwoUserService;
 import org.myoranges.sotwo.core.util.ResponseUtil;
+import org.myoranges.sotwo.db.service.SotwoGoodsService;
+import org.myoranges.sotwo.db.service.SotwoOrderService;
+import org.myoranges.sotwo.db.service.SotwoProductService;
+import org.myoranges.sotwo.db.service.SotwoUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,13 +20,13 @@ public class DashbordController {
     private final Log logger = LogFactory.getLog(DashbordController.class);
 
     @Autowired
-    private sotwoUserService userService;
+    private SotwoUserService userService;
     @Autowired
-    private sotwoGoodsService goodsService;
+    private SotwoGoodsService goodsService;
     @Autowired
-    private sotwoProductService productService;
+    private SotwoProductService productService;
     @Autowired
-    private sotwoOrderService orderService;
+    private SotwoOrderService orderService;
 
     @GetMapping("")
     public Object info(@LoginAdmin Integer adminId){

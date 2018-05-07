@@ -5,16 +5,16 @@ import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import me.chanjar.weixin.common.exception.WxErrorException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.myoranges.sotwo.db.domain.sotwoUser;
-import org.myoranges.sotwo.db.service.sotwoUserService;
 import org.myoranges.sotwo.core.util.JacksonUtil;
 import org.myoranges.sotwo.core.util.ResponseUtil;
+import org.myoranges.sotwo.core.util.bcrypt.BCryptPasswordEncoder;
+import org.myoranges.sotwo.db.domain.SotwoUser;
+import org.myoranges.sotwo.db.service.SotwoUserService;
 import org.myoranges.sotwo.wx.dao.FullUserInfo;
 import org.myoranges.sotwo.wx.dao.UserInfo;
 import org.myoranges.sotwo.wx.dao.UserToken;
 import org.myoranges.sotwo.wx.service.UserTokenManager;
 import org.myoranges.sotwo.wx.util.IpUtil;
-import org.myoranges.sotwo.core.util.bcrypt.BCryptPasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,7 +33,7 @@ public class WxAuthController {
     private final Log logger = LogFactory.getLog(WxAuthController.class);
 
     @Autowired
-    private sotwoUserService userService;
+    private SotwoUserService userService;
 
     @Autowired
     private WxMaService wxService;
@@ -65,8 +65,8 @@ public class WxAuthController {
             return ResponseUtil.badArgument();
         }
 
-        List<sotwoUser> userList =userService.queryByUsername(username);
-        sotwoUser user = null;
+        List<SotwoUser> userList =userService.queryByUsername(username);
+        SotwoUser user = null;
         if(userList.size() > 1){
             return ResponseUtil.fail502();
         }
@@ -148,9 +148,9 @@ public class WxAuthController {
         // 解密用户信息
 //        WxMaUserInfo wxMaUserInfo = this.wxService.getUserService().getUserInfo(sessionKey, fullUserInfo.getEncryptedData(), fullUserInfo.getIv());
 
-        sotwoUser user = userService.queryByOid(openId);
+        SotwoUser user = userService.queryByOid(openId);
         if(user == null){
-            user = new sotwoUser();
+            user = new SotwoUser();
             user.setUsername(userInfo.getNickName());  // 其实没有用，因为用户没有真正注册
             user.setPassword(openId);                  // 其实没有用，因为用户没有真正注册
             user.setWeixinOpenid(openId);
@@ -216,7 +216,7 @@ public class WxAuthController {
             return ResponseUtil.badArgument();
         }
 
-        List<sotwoUser> userList = userService.queryByUsername(username);
+        List<SotwoUser> userList = userService.queryByUsername(username);
         if(userList.size() > 0){
             return ResponseUtil.fail(403, "用户名已注册");
         }
@@ -225,13 +225,13 @@ public class WxAuthController {
         if(userList.size() > 0){
             return ResponseUtil.fail(403, "手机号已注册");
         }
-        sotwoUser user = new sotwoUser();
+        SotwoUser user = new SotwoUser();
 
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         String encodedPassword = encoder.encode(password);
         user.setPassword(encodedPassword);
 
-        user = new sotwoUser();
+        user = new SotwoUser();
         user.setUsername(username);
         user.setPassword(encodedPassword);
         user.setMobile(mobile);
@@ -286,8 +286,8 @@ public class WxAuthController {
             return ResponseUtil.badArgument();
         }
 
-        List<sotwoUser> userList = userService.queryByMobile(mobile);
-        sotwoUser user = null;
+        List<SotwoUser> userList = userService.queryByMobile(mobile);
+        SotwoUser user = null;
         if(userList.size() > 1){
             return ResponseUtil.serious();
         }

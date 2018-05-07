@@ -1,10 +1,9 @@
 package org.myoranges.sotwo.db.service;
 
 import com.github.pagehelper.PageHelper;
-import org.myoranges.sotwo.db.domain.sotwoGoods;
-import org.myoranges.sotwo.db.domain.sotwoGoods.Column;
 import org.myoranges.sotwo.db.dao.SotwoGoodsMapper;
-import org.myoranges.sotwo.db.domain.sotwoGoodsExample;
+import org.myoranges.sotwo.db.domain.SotwoGoods;
+import org.myoranges.sotwo.db.domain.SotwoGoodsExample;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -13,53 +12,53 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class sotwoGoodsService {
+public class SotwoGoodsService {
     @Resource
     private SotwoGoodsMapper goodsMapper;
 
-    public List<sotwoGoods> queryByHot(int offset, int limit) {
-        sotwoGoodsExample example = new sotwoGoodsExample();
+    public List<SotwoGoods> queryByHot(int offset, int limit) {
+        SotwoGoodsExample example = new SotwoGoodsExample();
         example.or().andIsHotEqualTo(true).andDeletedEqualTo(false);
         PageHelper.startPage(offset, limit);
         return goodsMapper.selectByExample(example);
     }
 
-    public List<sotwoGoods> queryByNew(int offset, int limit) {
-        sotwoGoodsExample example = new sotwoGoodsExample();
+    public List<SotwoGoods> queryByNew(int offset, int limit) {
+        SotwoGoodsExample example = new SotwoGoodsExample();
         example.or().andIsNewEqualTo(true).andDeletedEqualTo(false);
         PageHelper.startPage(offset, limit);
         return goodsMapper.selectByExample(example);
     }
 
-    public List<sotwoGoods> queryByCategory(List<Integer> catList, int offset, int limit) {
-        sotwoGoodsExample example = new sotwoGoodsExample();
+    public List<SotwoGoods> queryByCategory(List<Integer> catList, int offset, int limit) {
+        SotwoGoodsExample example = new SotwoGoodsExample();
         example.or().andCategoryIdIn(catList).andDeletedEqualTo(false);
         PageHelper.startPage(offset, limit);
         return goodsMapper.selectByExample(example);
     }
 
     public int countByCategory(List<Integer> catList, int offset, int limit) {
-        sotwoGoodsExample example = new sotwoGoodsExample();
+        SotwoGoodsExample example = new SotwoGoodsExample();
         example.or().andCategoryIdIn(catList).andDeletedEqualTo(false);
         return (int)goodsMapper.countByExample(example);
     }
 
-    public List<sotwoGoods> queryByCategory(Integer catId, int offset, int limit) {
-        sotwoGoodsExample example = new sotwoGoodsExample();
+    public List<SotwoGoods> queryByCategory(Integer catId, int offset, int limit) {
+        SotwoGoodsExample example = new SotwoGoodsExample();
         example.or().andCategoryIdEqualTo(catId).andDeletedEqualTo(false);
         PageHelper.startPage(offset, limit);
         return goodsMapper.selectByExample(example);
     }
 
     public int countByCategory(Integer catId, Integer page, Integer size) {
-        sotwoGoodsExample example = new sotwoGoodsExample();
+        SotwoGoodsExample example = new SotwoGoodsExample();
         example.or().andCategoryIdEqualTo(catId).andDeletedEqualTo(false);
         return (int)goodsMapper.countByExample(example);
     }
 
-    public List<sotwoGoods> querySelective(Integer catId, Integer brandId, String keyword, Integer isHot, Integer isNew, Integer offset, Integer limit, String sort) {
-        sotwoGoodsExample example = new sotwoGoodsExample();
-        sotwoGoodsExample.Criteria criteria = example.createCriteria();
+    public List<SotwoGoods> querySelective(Integer catId, Integer brandId, String keyword, Integer isHot, Integer isNew, Integer offset, Integer limit, String sort) {
+        SotwoGoodsExample example = new SotwoGoodsExample();
+        SotwoGoodsExample.Criteria criteria = example.createCriteria();
 
         if(catId != null && catId != 0){
             criteria.andCategoryIdEqualTo(catId);
@@ -85,13 +84,13 @@ public class sotwoGoodsService {
             PageHelper.startPage(offset, limit);
         }
 
-        Column[] columns = new Column[]{Column.id, Column.name, Column.listPicUrl, Column.retailPrice};
+        SotwoGoods.Column[] columns = new SotwoGoods.Column[]{SotwoGoods.Column.id, SotwoGoods.Column.name, SotwoGoods.Column.listPicUrl, SotwoGoods.Column.retailPrice};
         return goodsMapper.selectByExampleSelective(example ,columns);
     }
 
     public int countSelective(Integer catId, Integer brandId, String keyword, Integer isHot, Integer isNew, Integer offset, Integer limit, String sort) {
-        sotwoGoodsExample example = new sotwoGoodsExample();
-        sotwoGoodsExample.Criteria criteria = example.createCriteria();
+        SotwoGoodsExample example = new SotwoGoodsExample();
+        SotwoGoodsExample.Criteria criteria = example.createCriteria();
 
         if(catId != null){
             criteria.andCategoryIdEqualTo(catId);
@@ -113,28 +112,28 @@ public class sotwoGoodsService {
         return (int)goodsMapper.countByExample(example);
     }
 
-    public sotwoGoods findById(Integer id) {
-        sotwoGoodsExample example = new sotwoGoodsExample();
+    public SotwoGoods findById(Integer id) {
+        SotwoGoodsExample example = new SotwoGoodsExample();
         example.or().andIdEqualTo(id).andDeletedEqualTo(false);
         return goodsMapper.selectOneByExampleWithBLOBs(example);
     }
 
 
-    public List<sotwoGoods> queryByIds(List<Integer> relatedGoodsIds) {
-        sotwoGoodsExample example = new sotwoGoodsExample();
+    public List<SotwoGoods> queryByIds(List<Integer> relatedGoodsIds) {
+        SotwoGoodsExample example = new SotwoGoodsExample();
         example.or().andIdIn(relatedGoodsIds).andDeletedEqualTo(false);
         return goodsMapper.selectByExample(example);
     }
 
     public Integer queryOnSale() {
-        sotwoGoodsExample example = new sotwoGoodsExample();
+        SotwoGoodsExample example = new SotwoGoodsExample();
         example.or().andIsOnSaleEqualTo(true).andDeletedEqualTo(false);
         return (int)goodsMapper.countByExample(example);
     }
 
-    public List<sotwoGoods> querySelective(String goodsSn, String name, Integer page, Integer size, String sort, String order) {
-        sotwoGoodsExample example = new sotwoGoodsExample();
-        sotwoGoodsExample.Criteria criteria = example.createCriteria();
+    public List<SotwoGoods> querySelective(String goodsSn, String name, Integer page, Integer size, String sort, String order) {
+        SotwoGoodsExample example = new SotwoGoodsExample();
+        SotwoGoodsExample.Criteria criteria = example.createCriteria();
 
         if(!StringUtils.isEmpty(goodsSn)){
             criteria.andGoodsSnEqualTo(goodsSn);
@@ -149,8 +148,8 @@ public class sotwoGoodsService {
     }
 
     public int countSelective(String goodsSn, String name, Integer page, Integer size, String sort, String order) {
-        sotwoGoodsExample example = new sotwoGoodsExample();
-        sotwoGoodsExample.Criteria criteria = example.createCriteria();
+        SotwoGoodsExample example = new SotwoGoodsExample();
+        SotwoGoodsExample.Criteria criteria = example.createCriteria();
 
         if(!StringUtils.isEmpty(goodsSn)){
             criteria.andGoodsSnEqualTo(goodsSn);
@@ -163,12 +162,12 @@ public class sotwoGoodsService {
         return (int)goodsMapper.countByExample(example);
     }
 
-    public void updateById(sotwoGoods goods) {
+    public void updateById(SotwoGoods goods) {
         goodsMapper.updateByPrimaryKeySelective(goods);
     }
 
     public void deleteById(Integer id) {
-        sotwoGoods goods = goodsMapper.selectByPrimaryKey(id);
+        SotwoGoods goods = goodsMapper.selectByPrimaryKey(id);
         if(goods == null){
             return;
         }
@@ -176,19 +175,19 @@ public class sotwoGoodsService {
         goodsMapper.updateByPrimaryKeySelective(goods);
     }
 
-    public void add(sotwoGoods goods) {
+    public void add(SotwoGoods goods) {
         goodsMapper.insertSelective(goods);
     }
 
     public int count() {
-        sotwoGoodsExample example = new sotwoGoodsExample();
+        SotwoGoodsExample example = new SotwoGoodsExample();
         example.or().andDeletedEqualTo(false);
         return (int)goodsMapper.countByExample(example);
     }
 
     public List<Integer> getCatIds(Integer brandId, String keyword, Integer isHot, Integer isNew) {
-        sotwoGoodsExample example = new sotwoGoodsExample();
-        sotwoGoodsExample.Criteria criteria = example.createCriteria();
+        SotwoGoodsExample example = new SotwoGoodsExample();
+        SotwoGoodsExample.Criteria criteria = example.createCriteria();
 
         if(brandId != null){
             criteria.andBrandIdEqualTo(brandId);
@@ -204,9 +203,9 @@ public class sotwoGoodsService {
         }
         criteria.andDeletedEqualTo(false);
 
-        List<sotwoGoods> goodsList = goodsMapper.selectByExampleSelective(example, Column.categoryId);
+        List<SotwoGoods> goodsList = goodsMapper.selectByExampleSelective(example, SotwoGoods.Column.categoryId);
         List<Integer> cats = new ArrayList<Integer>();
-        for(sotwoGoods goods : goodsList){
+        for(SotwoGoods goods : goodsList){
             cats.add(goods.getCategoryId());
         }
         return cats;

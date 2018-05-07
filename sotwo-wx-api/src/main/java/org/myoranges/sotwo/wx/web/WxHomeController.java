@@ -2,9 +2,9 @@ package org.myoranges.sotwo.wx.web;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.myoranges.sotwo.core.util.ResponseUtil;
 import org.myoranges.sotwo.db.domain.*;
 import org.myoranges.sotwo.db.service.*;
-import org.myoranges.sotwo.core.util.ResponseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,17 +21,17 @@ public class WxHomeController {
     private final Log logger = LogFactory.getLog(WxHomeController.class);
 
     @Autowired
-    private sotwoAdService adService;
+    private SotwoAdService adService;
     @Autowired
-    private sotwoGoodsService goodsService;
+    private SotwoGoodsService goodsService;
     @Autowired
-    private sotwoBrandService brandService;
+    private SotwoBrandService brandService;
     @Autowired
-    private sotwoTopicService topicService;
+    private SotwoTopicService topicService;
     @Autowired
-    private sotwoCategoryService categoryService;
+    private SotwoCategoryService categoryService;
     @Autowired
-    private sotwoCartService cartService;
+    private SotwoCartService cartService;
 
     /**
      * app首页
@@ -57,34 +57,34 @@ public class WxHomeController {
     public Object index() {
         Map<String, Object> data = new HashMap<>();
 
-        List<sotwoAd> banner = adService.queryByApid(1);
+        List<SotwoAd> banner = adService.queryByApid(1);
         data.put("banner", banner);
 
-        List<sotwoCategory> channel = categoryService.queryChannel();
+        List<SotwoCategory> channel = categoryService.queryChannel();
         data.put("channel", channel);
 
-        List<sotwoGoods> newGoods = goodsService.queryByNew(0, 4);
+        List<SotwoGoods> newGoods = goodsService.queryByNew(0, 4);
         data.put("newGoodsList", newGoods);
 
-        List<sotwoGoods> hotGoods = goodsService.queryByHot(0, 3);
+        List<SotwoGoods> hotGoods = goodsService.queryByHot(0, 3);
         data.put("hotGoodsList", hotGoods);
 
-        List<sotwoBrand> brandList = brandService.query(0,4);
+        List<SotwoBrand> brandList = brandService.query(0,4);
         data.put("brandList", brandList);
 
-        List<sotwoTopic> topicList = topicService.queryList(0, 3);
+        List<SotwoTopic> topicList = topicService.queryList(0, 3);
         data.put("topicList", topicList);
 
         List<Map> categoryList = new ArrayList<>();
-        List<sotwoCategory> catL1List = categoryService.queryL1WithoutRecommend(0, 6);
-        for (sotwoCategory catL1 : catL1List) {
-            List<sotwoCategory> catL2List = categoryService.queryByPid(catL1.getId());
+        List<SotwoCategory> catL1List = categoryService.queryL1WithoutRecommend(0, 6);
+        for (SotwoCategory catL1 : catL1List) {
+            List<SotwoCategory> catL2List = categoryService.queryByPid(catL1.getId());
             List<Integer> l2List = new ArrayList<>();
-            for (sotwoCategory catL2 : catL2List) {
+            for (SotwoCategory catL2 : catL2List) {
                 l2List.add(catL2.getId());
             }
 
-            List<sotwoGoods> categoryGoods = goodsService.queryByCategory(l2List, 0, 5);
+            List<SotwoGoods> categoryGoods = goodsService.queryByCategory(l2List, 0, 5);
             Map catGoods = new HashMap();
             catGoods.put("id", catL1.getId());
             catGoods.put("name", catL1.getName());

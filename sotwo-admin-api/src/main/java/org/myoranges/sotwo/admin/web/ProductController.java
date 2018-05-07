@@ -3,12 +3,12 @@ package org.myoranges.sotwo.admin.web;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.myoranges.sotwo.admin.annotation.LoginAdmin;
-import org.myoranges.sotwo.db.domain.sotwoGoods;
-import org.myoranges.sotwo.db.domain.sotwoProduct;
-import org.myoranges.sotwo.db.service.sotwoGoodsService;
-import org.myoranges.sotwo.db.service.sotwoGoodsSpecificationService;
-import org.myoranges.sotwo.db.service.sotwoProductService;
 import org.myoranges.sotwo.core.util.ResponseUtil;
+import org.myoranges.sotwo.db.domain.SotwoGoods;
+import org.myoranges.sotwo.db.domain.SotwoProduct;
+import org.myoranges.sotwo.db.service.SotwoGoodsService;
+import org.myoranges.sotwo.db.service.SotwoGoodsSpecificationService;
+import org.myoranges.sotwo.db.service.SotwoProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,11 +23,11 @@ public class ProductController {
     private final Log logger = LogFactory.getLog(ProductController.class);
 
     @Autowired
-    private sotwoProductService productService;
+    private SotwoProductService productService;
     @Autowired
-    private sotwoGoodsService goodsService;
+    private SotwoGoodsService goodsService;
     @Autowired
-    private sotwoGoodsSpecificationService goodsSpecificationService;
+    private SotwoGoodsSpecificationService goodsSpecificationService;
 
     @GetMapping("/list")
     public Object list(@LoginAdmin Integer adminId,
@@ -39,7 +39,7 @@ public class ProductController {
             return ResponseUtil.unlogin();
         }
 
-        List<sotwoProduct> productList = productService.querySelective(goodsId, page, limit, sort, order);
+        List<SotwoProduct> productList = productService.querySelective(goodsId, page, limit, sort, order);
         int total = productService.countSelective(goodsId, page, limit, sort, order);
         Map<String, Object> data = new HashMap<>();
         data.put("total", total);
@@ -51,26 +51,26 @@ public class ProductController {
     /**
      *
      * @param adminId
-     * @param sotwoProduct
+     * @param SotwoProduct
      * @return
      */
     @PostMapping("/create")
-    public Object create(@LoginAdmin Integer adminId, @RequestBody sotwoProduct sotwoProduct){
+    public Object create(@LoginAdmin Integer adminId, @RequestBody SotwoProduct SotwoProduct){
         if(adminId == null){
             return ResponseUtil.unlogin();
         }
 
-        Integer goodsId = sotwoProduct.getGoodsId();
+        Integer goodsId = SotwoProduct.getGoodsId();
         if(goodsId == null){
             return ResponseUtil.badArgument();
         }
 
-        sotwoGoods goods = goodsService.findById(goodsId);
+        SotwoGoods goods = goodsService.findById(goodsId);
         if(goods == null){
             return ResponseUtil.badArgumentValue();
         }
 
-        List<sotwoProduct> productList = productService.queryByGid(goodsId);
+        List<SotwoProduct> productList = productService.queryByGid(goodsId);
         if(productList.size() != 0){
             return ResponseUtil.badArgumentValue();
         }
@@ -80,7 +80,7 @@ public class ProductController {
             return ResponseUtil.serious();
         }
 
-        sotwoProduct product = new sotwoProduct();
+        SotwoProduct product = new SotwoProduct();
         product.setGoodsId(goodsId);
         product.setGoodsNumber(0);
         product.setRetailPrice(new BigDecimal(0.00));
@@ -100,12 +100,12 @@ public class ProductController {
             return ResponseUtil.badArgument();
         }
 
-        sotwoProduct product = productService.findById(id);
+        SotwoProduct product = productService.findById(id);
         return ResponseUtil.ok(product);
     }
 
     @PostMapping("/update")
-    public Object update(@LoginAdmin Integer adminId, @RequestBody sotwoProduct product){
+    public Object update(@LoginAdmin Integer adminId, @RequestBody SotwoProduct product){
         if(adminId == null){
             return ResponseUtil.unlogin();
         }
@@ -114,7 +114,7 @@ public class ProductController {
     }
 
     @PostMapping("/delete")
-    public Object delete(@LoginAdmin Integer adminId, @RequestBody sotwoProduct product){
+    public Object delete(@LoginAdmin Integer adminId, @RequestBody SotwoProduct product){
         if(adminId == null){
             return ResponseUtil.unlogin();
         }

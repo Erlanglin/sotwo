@@ -1,9 +1,9 @@
 package org.myoranges.sotwo.db.service;
 
 import com.github.pagehelper.PageHelper;
-import org.myoranges.sotwo.db.domain.sotwoCollect;
 import org.myoranges.sotwo.db.dao.SotwoCollectMapper;
-import org.myoranges.sotwo.db.domain.sotwoCollectExample;
+import org.myoranges.sotwo.db.domain.SotwoCollect;
+import org.myoranges.sotwo.db.domain.SotwoCollectExample;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -11,38 +11,38 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @Service
-public class sotwoCollectService {
+public class SotwoCollectService {
     @Resource
     private SotwoCollectMapper collectMapper;
 
     public int count(int uid, Integer gid) {
-        sotwoCollectExample example = new sotwoCollectExample();
+        SotwoCollectExample example = new SotwoCollectExample();
         example.or().andUserIdEqualTo(uid).andValueIdEqualTo(gid).andDeletedEqualTo(false);
         return (int)collectMapper.countByExample(example);
     }
 
-    public List<sotwoCollect> queryByType(Integer userId, Integer typeId, Integer page, Integer size) {
-        sotwoCollectExample example = new sotwoCollectExample();
+    public List<SotwoCollect> queryByType(Integer userId, Integer typeId, Integer page, Integer size) {
+        SotwoCollectExample example = new SotwoCollectExample();
         example.or().andUserIdEqualTo(userId).andTypeIdEqualTo(typeId).andDeletedEqualTo(false);
-        example.setOrderByClause(sotwoCollect.Column.addTime.desc());
+        example.setOrderByClause(SotwoCollect.Column.addTime.desc());
         PageHelper.startPage(page, size);
         return collectMapper.selectByExample(example);
     }
 
     public int countByType(Integer userId, Integer typeId) {
-        sotwoCollectExample example = new sotwoCollectExample();
+        SotwoCollectExample example = new SotwoCollectExample();
         example.or().andUserIdEqualTo(userId).andTypeIdEqualTo(typeId).andDeletedEqualTo(false);
         return (int)collectMapper.countByExample(example);
     }
 
-    public sotwoCollect queryByTypeAndValue(Integer userId, Integer typeId, Integer valueId) {
-        sotwoCollectExample example = new sotwoCollectExample();
+    public SotwoCollect queryByTypeAndValue(Integer userId, Integer typeId, Integer valueId) {
+        SotwoCollectExample example = new SotwoCollectExample();
         example.or().andUserIdEqualTo(userId).andValueIdEqualTo(valueId).andTypeIdEqualTo(typeId).andDeletedEqualTo(false);
         return collectMapper.selectOneByExample(example);
     }
 
     public void deleteById(Integer id) {
-        sotwoCollect collect = collectMapper.selectByPrimaryKey(id);
+        SotwoCollect collect = collectMapper.selectByPrimaryKey(id);
         if(collect == null){
             return;
         }
@@ -50,13 +50,13 @@ public class sotwoCollectService {
         collectMapper.updateByPrimaryKey(collect);
     }
 
-    public int add(sotwoCollect collect) {
+    public int add(SotwoCollect collect) {
         return collectMapper.insertSelective(collect);
     }
 
-    public List<sotwoCollect> querySelective(String userId, String valueId, Integer page, Integer size, String sort, String order) {
-        sotwoCollectExample example = new sotwoCollectExample();
-        sotwoCollectExample.Criteria criteria = example.createCriteria();
+    public List<SotwoCollect> querySelective(String userId, String valueId, Integer page, Integer size, String sort, String order) {
+        SotwoCollectExample example = new SotwoCollectExample();
+        SotwoCollectExample.Criteria criteria = example.createCriteria();
 
         if(!StringUtils.isEmpty(userId)){
             criteria.andUserIdEqualTo(Integer.valueOf(userId));
@@ -71,8 +71,8 @@ public class sotwoCollectService {
     }
 
     public int countSelective(String userId, String valueId, Integer page, Integer size, String sort, String order) {
-        sotwoCollectExample example = new sotwoCollectExample();
-        sotwoCollectExample.Criteria criteria = example.createCriteria();
+        SotwoCollectExample example = new SotwoCollectExample();
+        SotwoCollectExample.Criteria criteria = example.createCriteria();
 
         if(!StringUtils.isEmpty(userId)){
             criteria.andUserIdEqualTo(Integer.valueOf(userId));
@@ -85,11 +85,11 @@ public class sotwoCollectService {
         return (int)collectMapper.countByExample(example);
     }
 
-    public void updateById(sotwoCollect collect) {
+    public void updateById(SotwoCollect collect) {
         collectMapper.updateByPrimaryKeySelective(collect);
     }
 
-    public sotwoCollect findById(Integer id) {
+    public SotwoCollect findById(Integer id) {
         return collectMapper.selectByPrimaryKey(id);
     }
 }

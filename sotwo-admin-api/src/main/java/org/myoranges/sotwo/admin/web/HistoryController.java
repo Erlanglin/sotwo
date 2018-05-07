@@ -3,9 +3,9 @@ package org.myoranges.sotwo.admin.web;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.myoranges.sotwo.admin.annotation.LoginAdmin;
-import org.myoranges.sotwo.db.domain.sotwoSearchHistory;
-import org.myoranges.sotwo.db.service.sotwoSearchHistoryService;
 import org.myoranges.sotwo.core.util.ResponseUtil;
+import org.myoranges.sotwo.db.domain.SotwoSearchHistory;
+import org.myoranges.sotwo.db.service.SotwoSearchHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +19,7 @@ public class HistoryController {
     private final Log logger = LogFactory.getLog(HistoryController.class);
 
     @Autowired
-    private sotwoSearchHistoryService searchHistoryService;
+    private SotwoSearchHistoryService searchHistoryService;
 
     @GetMapping("/list")
     public Object list(@LoginAdmin Integer adminId,
@@ -31,7 +31,7 @@ public class HistoryController {
             return ResponseUtil.unlogin();
         }
 
-        List<sotwoSearchHistory> footprintList = searchHistoryService.querySelective(userId, keyword, page, limit, sort, order);
+        List<SotwoSearchHistory> footprintList = searchHistoryService.querySelective(userId, keyword, page, limit, sort, order);
         int total = searchHistoryService.countSelective(userId, keyword, page, limit, sort, order);
         Map<String, Object> data = new HashMap<>();
         data.put("total", total);
@@ -41,7 +41,7 @@ public class HistoryController {
     }
 
     @PostMapping("/create")
-    public Object create(@LoginAdmin Integer adminId, @RequestBody sotwoSearchHistory history){
+    public Object create(@LoginAdmin Integer adminId, @RequestBody SotwoSearchHistory history){
         if(adminId == null){
             return ResponseUtil.fail401();
         }
@@ -58,12 +58,12 @@ public class HistoryController {
             return ResponseUtil.badArgument();
         }
 
-        sotwoSearchHistory history = searchHistoryService.findById(id);
+        SotwoSearchHistory history = searchHistoryService.findById(id);
         return ResponseUtil.ok(history);
     }
 
     @PostMapping("/update")
-    public Object update(@LoginAdmin Integer adminId, @RequestBody sotwoSearchHistory history){
+    public Object update(@LoginAdmin Integer adminId, @RequestBody SotwoSearchHistory history){
         if(adminId == null){
             return ResponseUtil.unlogin();
         }
@@ -72,7 +72,7 @@ public class HistoryController {
     }
 
     @PostMapping("/delete")
-    public Object delete(@LoginAdmin Integer adminId, @RequestBody sotwoSearchHistory history){
+    public Object delete(@LoginAdmin Integer adminId, @RequestBody SotwoSearchHistory history){
         if(adminId == null){
             return ResponseUtil.unlogin();
         }

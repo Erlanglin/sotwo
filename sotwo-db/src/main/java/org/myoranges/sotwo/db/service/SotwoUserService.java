@@ -2,39 +2,39 @@ package org.myoranges.sotwo.db.service;
 
 import com.github.pagehelper.PageHelper;
 import org.myoranges.sotwo.db.dao.SotwoUserMapper;
-import org.myoranges.sotwo.db.domain.sotwoUser;
-import org.myoranges.sotwo.db.domain.sotwoUserExample;
+import org.myoranges.sotwo.db.domain.SotwoUser;
+import org.myoranges.sotwo.db.domain.SotwoUserExample;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import javax.annotation.Resource;
 import java.util.List;
 
 @Service
-public class sotwoUserService {
+public class SotwoUserService {
     @Resource
     private SotwoUserMapper userMapper;
 
-    public sotwoUser findById(Integer userId) {
+    public SotwoUser findById(Integer userId) {
         return userMapper.selectByPrimaryKey(userId);
     }
 
-    public sotwoUser queryByOid(String openId) {
-        sotwoUserExample example = new sotwoUserExample();
+    public SotwoUser queryByOid(String openId) {
+        SotwoUserExample example = new SotwoUserExample();
         example.or().andWeixinOpenidEqualTo(openId).andDeletedEqualTo(false);
         return userMapper.selectOneByExample(example);
     }
 
-    public void add(sotwoUser user) {
+    public void add(SotwoUser user) {
         userMapper.insertSelective(user);
     }
 
-    public void update(sotwoUser user) {
+    public void update(SotwoUser user) {
         userMapper.updateByPrimaryKeySelective(user);
     }
 
-    public List<sotwoUser> querySelective(String username, String mobile, Integer page, Integer size, String sort, String order) {
-        sotwoUserExample example = new sotwoUserExample();
-        sotwoUserExample.Criteria criteria = example.createCriteria();
+    public List<SotwoUser> querySelective(String username, String mobile, Integer page, Integer size, String sort, String order) {
+        SotwoUserExample example = new SotwoUserExample();
+        SotwoUserExample.Criteria criteria = example.createCriteria();
 
         if(!StringUtils.isEmpty(username)){
             criteria.andUsernameLike("%" + username + "%");
@@ -49,8 +49,8 @@ public class sotwoUserService {
     }
 
     public int countSeletive(String username, String mobile, Integer page, Integer size, String sort, String order) {
-        sotwoUserExample example = new sotwoUserExample();
-        sotwoUserExample.Criteria criteria = example.createCriteria();
+        SotwoUserExample example = new SotwoUserExample();
+        SotwoUserExample.Criteria criteria = example.createCriteria();
 
         if(!StringUtils.isEmpty(username)){
             criteria.andUsernameLike("%" + username + "%");
@@ -64,26 +64,26 @@ public class sotwoUserService {
     }
 
     public int count() {
-        sotwoUserExample example = new sotwoUserExample();
+        SotwoUserExample example = new SotwoUserExample();
         example.or().andDeletedEqualTo(false);
 
         return (int)userMapper.countByExample(example);
     }
 
-    public List<sotwoUser> queryByUsername(String username) {
-        sotwoUserExample example = new sotwoUserExample();
+    public List<SotwoUser> queryByUsername(String username) {
+        SotwoUserExample example = new SotwoUserExample();
         example.or().andUsernameEqualTo(username).andDeletedEqualTo(false);
         return userMapper.selectByExample(example);
     }
 
-    public List<sotwoUser> queryByMobile(String mobile) {
-        sotwoUserExample example = new sotwoUserExample();
+    public List<SotwoUser> queryByMobile(String mobile) {
+        SotwoUserExample example = new SotwoUserExample();
         example.or().andMobileEqualTo(mobile).andDeletedEqualTo(false);
         return userMapper.selectByExample(example);
     }
 
     public void deleteById(Integer id) {
-        sotwoUser user = userMapper.selectByPrimaryKey(id);
+        SotwoUser user = userMapper.selectByPrimaryKey(id);
         if(user == null){
             return;
         }

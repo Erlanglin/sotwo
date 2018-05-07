@@ -4,9 +4,9 @@ import com.github.pagehelper.util.StringUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.myoranges.sotwo.admin.annotation.LoginAdmin;
-import org.myoranges.sotwo.db.domain.sotwoUser;
-import org.myoranges.sotwo.db.service.sotwoUserService;
 import org.myoranges.sotwo.core.util.ResponseUtil;
+import org.myoranges.sotwo.db.domain.SotwoUser;
+import org.myoranges.sotwo.db.service.SotwoUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +20,7 @@ public class UserController {
     private final Log logger = LogFactory.getLog(UserController.class);
 
     @Autowired
-    private sotwoUserService userService;
+    private SotwoUserService userService;
 
     @GetMapping("/list")
     public Object list(@LoginAdmin Integer adminId,
@@ -31,7 +31,7 @@ public class UserController {
         if(adminId == null){
             return ResponseUtil.fail401();
         }
-        List<sotwoUser> userList = userService.querySelective(username, mobile, page, limit, sort, order);
+        List<SotwoUser> userList = userService.querySelective(username, mobile, page, limit, sort, order);
         int total = userService.countSeletive(username, mobile, page, limit, sort, order);
         Map<String, Object> data = new HashMap<>();
         data.put("total", total);
@@ -55,7 +55,7 @@ public class UserController {
 
 
     @PostMapping("/create")
-    public Object create(@LoginAdmin Integer adminId, @RequestBody sotwoUser user){
+    public Object create(@LoginAdmin Integer adminId, @RequestBody SotwoUser user){
         logger.debug(user);
 
         userService.add(user);
@@ -63,7 +63,7 @@ public class UserController {
     }
 
     @PostMapping("/update")
-    public Object update(@LoginAdmin Integer adminId, @RequestBody sotwoUser user){
+    public Object update(@LoginAdmin Integer adminId, @RequestBody SotwoUser user){
         logger.debug(user);
 
         userService.update(user);

@@ -2,8 +2,8 @@ package org.myoranges.sotwo.db.service;
 
 import com.github.pagehelper.PageHelper;
 import org.myoranges.sotwo.db.dao.SotwoIssueMapper;
-import org.myoranges.sotwo.db.domain.sotwoIssue;
-import org.myoranges.sotwo.db.domain.sotwoIssueExample;
+import org.myoranges.sotwo.db.domain.SotwoIssue;
+import org.myoranges.sotwo.db.domain.SotwoIssueExample;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -11,18 +11,18 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @Service
-public class sotwoIssueService {
+public class SotwoIssueService {
     @Resource
     private SotwoIssueMapper issueMapper;
 
-    public List<sotwoIssue> query() {
-        sotwoIssueExample example = new sotwoIssueExample();
+    public List<SotwoIssue> query() {
+        SotwoIssueExample example = new SotwoIssueExample();
         example.or().andDeletedEqualTo(false);
         return issueMapper.selectByExample(example);
     }
 
     public void deleteById(Integer id) {
-        sotwoIssue issue = issueMapper.selectByPrimaryKey(id);
+        SotwoIssue issue = issueMapper.selectByPrimaryKey(id);
         if(issue == null){
             return;
         }
@@ -30,13 +30,13 @@ public class sotwoIssueService {
         issueMapper.updateByPrimaryKey(issue);
     }
 
-    public void add(sotwoIssue issue) {
+    public void add(SotwoIssue issue) {
         issueMapper.insertSelective(issue);
     }
 
-    public List<sotwoIssue> querySelective(String question, Integer page, Integer size, String sort, String order) {
-        sotwoIssueExample example = new sotwoIssueExample();
-        sotwoIssueExample.Criteria criteria = example.createCriteria();
+    public List<SotwoIssue> querySelective(String question, Integer page, Integer size, String sort, String order) {
+        SotwoIssueExample example = new SotwoIssueExample();
+        SotwoIssueExample.Criteria criteria = example.createCriteria();
 
         if(!StringUtils.isEmpty(question)){
             criteria.andQuestionLike("%" + question + "%" );
@@ -48,8 +48,8 @@ public class sotwoIssueService {
     }
 
     public int countSelective(String question, Integer page, Integer size, String sort, String order) {
-        sotwoIssueExample example = new sotwoIssueExample();
-        sotwoIssueExample.Criteria criteria = example.createCriteria();
+        SotwoIssueExample example = new SotwoIssueExample();
+        SotwoIssueExample.Criteria criteria = example.createCriteria();
 
         if(!StringUtils.isEmpty(question)){
             criteria.andQuestionLike("%" + question + "%" );
@@ -59,11 +59,11 @@ public class sotwoIssueService {
         return (int)issueMapper.countByExample(example);
     }
 
-    public void updateById(sotwoIssue issue) {
+    public void updateById(SotwoIssue issue) {
         issueMapper.updateByPrimaryKeySelective(issue);
     }
 
-    public sotwoIssue findById(Integer id) {
+    public SotwoIssue findById(Integer id) {
         return issueMapper.selectByPrimaryKey(id);
     }
 }
