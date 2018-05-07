@@ -274,7 +274,7 @@ public class SotwoCollect {
         if (getClass() != that.getClass()) {
             return false;
         }
-        sotwoCollect other = (sotwoCollect) that;
+        SotwoCollect other = (SotwoCollect) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
             && (this.getUserId() == null ? other.getUserId() == null : this.getUserId().equals(other.getUserId()))
             && (this.getValueId() == null ? other.getValueId() == null : this.getValueId().equals(other.getValueId()))

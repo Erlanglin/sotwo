@@ -377,7 +377,7 @@ public class SotwoComment {
         if (getClass() != that.getClass()) {
             return false;
         }
-        sotwoComment other = (sotwoComment) that;
+        SotwoComment other = (SotwoComment) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
             && (this.getTypeId() == null ? other.getTypeId() == null : this.getTypeId().equals(other.getTypeId()))
             && (this.getValueId() == null ? other.getValueId() == null : this.getValueId().equals(other.getValueId()))
