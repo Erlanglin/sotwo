@@ -34,8 +34,8 @@
         <!--数据库连接信息-->
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
                         connectionURL="jdbc:mysql://127.0.0.1:3306/sotwo?useUnicode=true&amp;characterEncoding=UTF-8&amp;serverTimezone=UTC&amp;verifyServerCertificate=false&amp;useSSL=false"
-                        userId="sotwo"
-                        password="sotwo123456" />
+                        userId="root"
+                        password="123456" />
 
 
         <javaModelGenerator targetPackage="org.myoranges.sotwo.db.domain" targetProject="src/main/java" />
