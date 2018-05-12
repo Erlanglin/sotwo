@@ -171,6 +171,17 @@
             <columnOverride javaType="java.time.LocalDateTime" column="used_time"/>
             <columnOverride javaType="java.time.LocalDateTime" column="add_time"/>
         </table>
+        <table tableName="sotwo_consume_log">
+            <generatedKey column="id" sqlStatement="MySql" identity="true" />
+            <columnOverride javaType="java.time.LocalDateTime" column="reg_time"/>
+            <columnOverride javaType="java.time.LocalDateTime" column="handler_time"/>
+            <columnOverride javaType="java.time.LocalDateTime" column="add_time"/>
+        </table>
+        <table tableName="sotwo_consume_info">
+            <generatedKey column="id" sqlStatement="MySql" identity="true" />
+            <columnOverride javaType="java.time.LocalDateTime" column="handler_time"/>
+            <columnOverride javaType="java.time.LocalDateTime" column="user_id"/>
+        </table>
 
 
     </context>
