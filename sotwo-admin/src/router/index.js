@@ -108,6 +108,19 @@ export const asyncRouterMap = [
     ]
   },
   {
+    path: '/consume',
+    component: Layout,
+    redirect: 'noredirect',
+    name: 'consumeManage',
+    meta: {
+      title: '账单管理',
+      icon: 'chart'
+    },
+    children: [
+      { path: 'consumeInfo', component: _import('consume/consumeInfo'), name: 'consumeInfo', meta: { title: '账单管理', noCache: true }}
+    ]
+  },
+  {
     path: '/promotion',
     component: Layout,
     redirect: 'noredirect',

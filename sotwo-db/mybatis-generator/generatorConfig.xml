@@ -180,7 +180,7 @@
         <table tableName="sotwo_consume_info">
             <generatedKey column="id" sqlStatement="MySql" identity="true" />
             <columnOverride javaType="java.time.LocalDateTime" column="handler_time"/>
-            <columnOverride javaType="java.time.LocalDateTime" column="user_id"/>
+            <columnOverride javaType="java.time.LocalDateTime" column="add_time"/>
         </table>
 
 
