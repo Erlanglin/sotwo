@@ -4,9 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.myoranges.sotwo.admin.annotation.LoginAdmin;
 import org.myoranges.sotwo.core.util.ResponseUtil;
-import org.myoranges.sotwo.db.domain.SotwoConsumeInfo;
 import org.myoranges.sotwo.db.domain.SotwoConsumeLog;
-import org.myoranges.sotwo.db.domain.SotwoGoods;
 import org.myoranges.sotwo.db.service.SotwoConsumeLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/admin/consumLog")
+@RequestMapping("/admin/consumeLog")
 public class ConsumeLogController {
     private final Log logger = LogFactory.getLog(ConsumeLogController.class);
 
@@ -25,13 +23,13 @@ public class ConsumeLogController {
 
     @GetMapping("/list")
     public Object list(@LoginAdmin Integer adminId,
-                       int consumeCategoryId, int payUserId,
+                       Integer consumeCategoryId, Integer payUserId,
                        @RequestParam(value = "page", defaultValue = "1") Integer page,
                        @RequestParam(value = "limit", defaultValue = "10") Integer limit,
                        String sort, String order) {
-/*        if(adminId == null){
+        if (adminId == null) {
             return ResponseUtil.fail401();
-        }*/
+        }
         List<SotwoConsumeLog> consumeLogList = consumeLogService.querySelective(consumeCategoryId, payUserId, page, limit, sort, order);
         int total = consumeLogService.countSeletive(consumeCategoryId, payUserId, page, limit, sort, order);
         Map<String, Object> data = new HashMap<>();
@@ -42,7 +40,7 @@ public class ConsumeLogController {
     }
 
     @GetMapping("/consumeCategoryId")
-    public Object consumeLogname(int consumeCategoryId) {
+    public Object consumeLogname(Integer consumeCategoryId) {
         if (consumeCategoryId == 0) {
             return ResponseUtil.fail402();
         }

@@ -25,7 +25,7 @@ public class ConsumeInfoController {
 
     @GetMapping("/list")
     public Object list(@LoginAdmin Integer adminId,
-                       int consumeLogId, int userId,
+                       Integer consumeLogId, Integer userId,
                        @RequestParam(value = "page", defaultValue = "1") Integer page,
                        @RequestParam(value = "limit", defaultValue = "10") Integer limit,
                        String sort, String order) {
@@ -44,7 +44,7 @@ public class ConsumeInfoController {
     }
 
     @GetMapping("/consumeLogId")
-    public Object consumeInfoname(int consumeLogId) {
+    public Object consumeInfoname(Integer consumeLogId) {
         if (consumeLogId == 0) {
             return ResponseUtil.fail402();
         }

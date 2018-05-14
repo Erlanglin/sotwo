@@ -117,7 +117,8 @@ export const asyncRouterMap = [
       icon: 'chart'
     },
     children: [
-      { path: 'consumeInfo', component: _import('consume/consumeInfo'), name: 'consumeInfo', meta: { title: '账单管理', noCache: true }}
+      { path: 'consumeLog', component: _import('consume/consumeLog'), name: 'consumeLog', meta: { title: '账单记录', noCache: true }},
+      { path: 'consumeInfo', component: _import('consume/consumeInfo'), name: 'consumeInfo', meta: { title: '账单结算', noCache: true }}
     ]
   },
   {
