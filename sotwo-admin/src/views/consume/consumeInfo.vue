@@ -66,9 +66,6 @@
     <!-- 添加或修改对话框 -->
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form :rules="rules" ref="dataForm" :model="dataForm" status-icon label-position="left" label-width="100px" style='width: 400px; margin-left:50px;'>
-        <el-form-item label="消费信息Id" prop="id">
-          <el-input v-model="dataForm.id"></el-input>
-        </el-form-item>
         <el-form-item label="消费记录Id" prop="consumeLogId">
           <el-input v-model="dataForm.consumeLogId"></el-input>
         </el-form-item>        
@@ -93,9 +90,13 @@
             <el-option label="否" :value="false">
             </el-option>
           </el-select>
-        </el-form-item>
-            
- </el-form>
+        </el-form-item>   
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取消</el-button>
+        <el-button v-if="dialogStatus=='create'" type="primary" @click="createData">确定</el-button>
+        <el-button v-else type="primary" @click="updateData">确定</el-button>
+      </div> 
 </el-dialog>
   </div>
 </template>
@@ -144,7 +145,7 @@ export default {
         id: undefined,
         consumeLogId: undefined,
         userId: undefined,
-        payStatus: true,
+        payStatus: false,
         price: undefined,
         status: false,
         handlerTime: undefined

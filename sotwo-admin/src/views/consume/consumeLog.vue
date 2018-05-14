@@ -67,9 +67,6 @@
     <!-- 添加或修改对话框 -->
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form :rules="rules" ref="dataForm" :model="dataForm" status-icon label-position="left" label-width="100px" style='width: 400px; margin-left:50px;'>
-        <el-form-item label="消费记录Id" prop="id">
-          <el-input v-model="dataForm.id"></el-input>
-        </el-form-item>
         <el-form-item label="消费主题" prop="consumeTitle">
           <el-input v-model="dataForm.consumeTitle"></el-input>
         </el-form-item>  
@@ -86,8 +83,9 @@
           <el-input v-model="dataForm.payUserId"></el-input>
         </el-form-item>
         <el-form-item label="消费时间" prop="regTime">
-          <el-input v-model="dataForm.regTime"></el-input>
-        </el-form-item>            
+          <el-date-picker v-model="dataForm.handlerTime" type="date" placeholder="选择日期" value-format="yyyy-MM-dd">
+          </el-date-picker>
+        </el-form-item>           
         <el-form-item label="是否结清" prop="status">
           <el-select v-model="dataForm.status" placeholder="请选择">
             <el-option label="是" :value="true">
@@ -96,10 +94,18 @@
             </el-option>
           </el-select>
         </el-form-item>
-            
- </el-form>
-</el-dialog>
-  </div>
+        <el-form-item label="结清时间" prop="handlerTimehandlerTime">
+          <el-date-picker v-model="dataForm.handlerTime" type="date" placeholder="选择日期" value-format="yyyy-MM-dd">
+          </el-date-picker>
+        </el-form-item>    
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">取消</el-button>
+          <el-button v-if="dialogStatus=='create'" type="primary" @click="createData">确定</el-button>
+          <el-button v-else type="primary" @click="updateData">确定</el-button>
+        </div>
+      </el-dialog>
+    </div>
 </template>
 
 <style>
