@@ -39,7 +39,7 @@ public class WxAddressController {
      *   失败则 { errno: XXX, errmsg: XXX }
      */
     @GetMapping("list")
-    public Object list(@LoginUser Integer userId) {
+    public Object list(Integer userId) {
         if(userId == null){
             return ResponseUtil.unlogin();
         }
