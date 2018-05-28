@@ -28,6 +28,10 @@ module.exports = {
     AuthRegister: WxApiRoot + 'auth/register', //账号注册
     AuthReset: WxApiRoot + 'auth/reset', //账号密码重置
 
+    ConsumeLogList: WxApiRoot + 'conusme/logList',  //账单记录
+    ConsumeInfoList: WxApiRoot + 'conusme/logList',  //账单详情
+
+
     GoodsCount: WxApiRoot + 'goods/count',  //统计商品总数
     GoodsList: WxApiRoot + 'goods/list',  //获得商品列表
     GoodsCategory: WxApiRoot + 'goods/category',  //获得分类数据
