@@ -21,8 +21,8 @@ public class SotwoConsumeInfoService {
         return consumeInfoMapper.selectByPrimaryKey(consumeInfoId);
     }
 
-    public void add(SotwoConsumeInfo consumeInfo) {
-        consumeInfoMapper.insertSelective(consumeInfo);
+    public int add(SotwoConsumeInfo consumeInfo) {
+        return consumeInfoMapper.insertSelective(consumeInfo);
     }
 
     public void update(SotwoConsumeInfo consumeInfo) {
@@ -43,31 +43,13 @@ public class SotwoConsumeInfoService {
         return consumeInfoMapper.selectByExample(example);
     }
 
-    public List<SotwoConsumeInfo> querySelective(Integer consumeLogId, Integer userId, Integer page, Integer size, String sort, String order) {
-        SotwoConsumeInfoExample example = new SotwoConsumeInfoExample();
-        SotwoConsumeInfoExample.Criteria criteria = example.createCriteria();
-
-        if (consumeLogId != null) {
-            criteria.andConsumeLogIdEqualTo(consumeLogId);
-        }
-        if (userId != null) {
-            criteria.andUserIdEqualTo(userId);
-        }
+    public List<SotwoConsumeInfo> querySelective(SotwoConsumeInfo sotwoConsumeInfo, Integer page, Integer size, String sort, String order) {
         PageHelper.startPage(page, size);
-        return consumeInfoMapper.selectByExample(example);
+        return consumeInfoMapper.selectByExample(this.entitytoExample(sotwoConsumeInfo));
     }
 
-    public int countSeletive(Integer consumeLogId, Integer userId, Integer page, Integer size, String sort, String order) {
-        SotwoConsumeInfoExample example = new SotwoConsumeInfoExample();
-        SotwoConsumeInfoExample.Criteria criteria = example.createCriteria();
-        if (consumeLogId != null) {
-            criteria.andConsumeLogIdEqualTo(consumeLogId);
-        }
-        if (userId != null) {
-            criteria.andUserIdEqualTo(userId);
-        }
-
-        return (int) consumeInfoMapper.countByExample(example);
+    public int countSeletive(SotwoConsumeInfo sotwoConsumeInfo, Integer page, Integer size, String sort, String order) {
+        return (int) consumeInfoMapper.countByExample(this.entitytoExample(sotwoConsumeInfo));
     }
 
     public void deleteById(Integer id) {
@@ -77,4 +59,35 @@ public class SotwoConsumeInfoService {
         }
         consumeInfoMapper.updateByPrimaryKey(consumeInfo);
     }
+
+    public SotwoConsumeInfoExample entitytoExample(SotwoConsumeInfo sotwoConsumeInfo) {
+        SotwoConsumeInfoExample sotwoConsumeInfoExample = new SotwoConsumeInfoExample();
+        SotwoConsumeInfoExample.Criteria criteria = sotwoConsumeInfoExample.createCriteria();
+        if (sotwoConsumeInfo.getId() != null) {
+            criteria.andIdEqualTo(sotwoConsumeInfo.getId());
+        }
+        if (sotwoConsumeInfo.getUserId() != null) {
+            criteria.andUserIdEqualTo(sotwoConsumeInfo.getUserId());
+        }
+        if (sotwoConsumeInfo.getAddTime() != null) {
+            criteria.andAddTimeEqualTo(sotwoConsumeInfo.getAddTime());
+        }
+        if (sotwoConsumeInfo.getConsumeLogId() != null) {
+            criteria.andConsumeLogIdEqualTo(sotwoConsumeInfo.getConsumeLogId());
+        }
+        if (sotwoConsumeInfo.getHandlerTime() != null) {
+            criteria.andHandlerTimeEqualTo(sotwoConsumeInfo.getHandlerTime());
+        }
+        if (sotwoConsumeInfo.getPayStatus() != null) {
+            criteria.andPayStatusEqualTo(sotwoConsumeInfo.getPayStatus());
+        }
+        if (sotwoConsumeInfo.getStatus() != null) {
+            criteria.andStatusEqualTo(sotwoConsumeInfo.getStatus());
+        }
+        if (sotwoConsumeInfo.getPrice() != null) {
+            criteria.andPriceEqualTo(sotwoConsumeInfo.getPrice());
+        }
+        return sotwoConsumeInfoExample;
+    }
+
 }

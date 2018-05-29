@@ -25,7 +25,7 @@ public class ConsumeInfoController {
 
     @GetMapping("/list")
     public Object list(@LoginAdmin Integer adminId,
-                       Integer consumeLogId, Integer userId,
+                       SotwoConsumeInfo sotwoConsumeInfo,
                        @RequestParam(value = "page", defaultValue = "1") Integer page,
                        @RequestParam(value = "limit", defaultValue = "10") Integer limit,
                        String sort, String order) {
@@ -34,8 +34,8 @@ public class ConsumeInfoController {
         }*/
         logger.debug(adminId);
 
-        List<SotwoConsumeInfo> consumeInfoList = consumeInfoService.querySelective(consumeLogId, userId, page, limit, sort, order);
-        int total = consumeInfoService.countSeletive(consumeLogId, userId, page, limit, sort, order);
+        List<SotwoConsumeInfo> consumeInfoList = consumeInfoService.querySelective(sotwoConsumeInfo, page, limit, sort, order);
+        int total = consumeInfoService.countSeletive(sotwoConsumeInfo, page, limit, sort, order);
         Map<String, Object> data = new HashMap<>();
         data.put("total", total);
         data.put("items", consumeInfoList);
@@ -43,29 +43,15 @@ public class ConsumeInfoController {
         return ResponseUtil.ok(data);
     }
 
-    @GetMapping("/consumeLogId")
-    public Object consumeInfoname(Integer consumeLogId) {
-        if (consumeLogId == 0) {
-            return ResponseUtil.fail402();
-        }
-
-        int total = consumeInfoService.countSeletive(consumeLogId, null, null, null, null, null);
-        if (total == 0) {
-            return ResponseUtil.ok("不存在");
-        }
-        return ResponseUtil.ok("已存在");
-    }
 
     @GetMapping("/read")
     public Object read(@LoginAdmin Integer adminId, Integer id) {
         if (adminId == null) {
             return ResponseUtil.unlogin();
         }
-
         if (id == null) {
             return ResponseUtil.badArgument();
         }
-
         SotwoConsumeInfo consumeInfo = consumeInfoService.findById(id);
         return ResponseUtil.ok(consumeInfo);
     }
@@ -73,7 +59,6 @@ public class ConsumeInfoController {
     @PostMapping("/create")
     public Object create(@LoginAdmin Integer adminId, @RequestBody SotwoConsumeInfo consumeInfo) {
         logger.debug(consumeInfo);
-
         consumeInfoService.add(consumeInfo);
         return ResponseUtil.ok(consumeInfo);
     }
@@ -81,7 +66,6 @@ public class ConsumeInfoController {
     @PostMapping("/update")
     public Object update(@LoginAdmin Integer adminId, @RequestBody SotwoConsumeInfo consumeInfo) {
         logger.debug(consumeInfo);
-
         consumeInfoService.update(consumeInfo);
         return ResponseUtil.ok(consumeInfo);
     }

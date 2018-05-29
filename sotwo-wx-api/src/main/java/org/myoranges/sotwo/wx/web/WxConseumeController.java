@@ -11,10 +11,7 @@ import org.myoranges.sotwo.db.service.*;
 import org.myoranges.sotwo.db.util.SortUtil;
 import org.myoranges.sotwo.wx.annotation.LoginUser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -33,31 +30,7 @@ public class WxConseumeController {
     @Autowired
     private SotwoConsumeInfoService consumeInfoService;
     @Autowired
-    private SotwoProductService productService;
-    @Autowired
-    private SotwoIssueService goodsIssueService;
-    @Autowired
-    private SotwoGoodsAttributeService goodsAttributeService;
-    @Autowired
-    private SotwoBrandService brandService;
-    @Autowired
-    private SotwoCommentService commentService;
-    @Autowired
     private SotwoUserService userService;
-    @Autowired
-    private SotwoCollectService collectService;
-    @Autowired
-    private SotwoFootprintService footprintService;
-    @Autowired
-    private SotwoCategoryService categoryService;
-    @Autowired
-    private SotwoSearchHistoryService searchHistoryService;
-    @Autowired
-    private SotwoCouponService apiCouponService;
-    @Autowired
-    private SotwoCartService cartService;
-    @Autowired
-    private SotwoGoodsSpecificationService goodsSpecificationService;
 
     /**
      * 根据条件搜素消费记录
@@ -85,16 +58,15 @@ public class WxConseumeController {
      */
     @GetMapping("logList")
     @ApiOperation(value = "根据条件搜素消费记录", notes = "")
-    public Object logList(Integer consumeCategoryId,
-                          Integer payUserId,
+    public Object logList(SotwoConsumeLog sotwoConsumeLog,
                           @RequestParam(value = "page", defaultValue = "1") Integer page,
                           @RequestParam(value = "size", defaultValue = "10") Integer size,
                           String sort, String order) {
 
 
         //查询列表数据
-        List<SotwoConsumeLog> consumeLogsList = consumeLogService.querySelective(consumeCategoryId, payUserId, page, size, sort, order);
-        int total = consumeLogService.countSeletive(consumeCategoryId, payUserId, page, size, sort, order);
+        List<SotwoConsumeLog> consumeLogsList = consumeLogService.querySelective(sotwoConsumeLog, page, size, sort, order);
+        int total = consumeLogService.countSeletive(sotwoConsumeLog, page, size, sort, order);
 
 
         Map<String, Object> data = new HashMap<>();
@@ -102,6 +74,53 @@ public class WxConseumeController {
         data.put("count", total);
         return ResponseUtil.ok(data);
     }
+
+
+    /**
+     * 消费者列表（目前就是用户列表）
+     *
+     * @param page  分页页数
+     * @param limit 分页大小
+     * @param sort  排序方式
+     * @param order 排序类型，顺序或者降序
+     * @return 根据条件搜素的商品详情
+     */
+    @GetMapping("/userList")
+    @ApiOperation(value = "消费者列表（目前就是用户列表）", notes = "")
+    public Object list(
+            String username, String mobile,
+            @RequestParam(value = "page", defaultValue = "1") Integer page,
+            @RequestParam(value = "limit", defaultValue = "10") Integer limit,
+            String sort, String order) {
+        List<SotwoUser> userList = userService.querySelective(username, mobile, page, limit, sort, order);
+        int total = userService.countSeletive(username, mobile, page, limit, sort, order);
+        Map<String, Object> data = new HashMap<>();
+        data.put("total", total);
+        data.put("items", userList);
+        return ResponseUtil.ok(data);
+    }
+
+
+    /**
+     * 添加消费记录（记账）
+     *
+     * @return 根据条件搜素的商品详情
+     */
+    @PostMapping("/addConsumeLog")
+    @ApiOperation(value = "添加消费记录（记账）", notes = "")
+    public Object list(@RequestBody SotwoConsumeLog consumeLog,
+                       @RequestBody List<SotwoConsumeInfo> sotwoConsumeInfos) {
+        int addNum = consumeLogService.add(consumeLog);
+        for (SotwoConsumeInfo consumeInfo : sotwoConsumeInfos){
+            consumeInfo.setConsumeLogId(consumeLog.getId());
+            consumeInfoService.add(consumeInfo);
+        }
+        if (addNum == 0) {
+            return ResponseUtil.fail(-1, "添加账单失败");
+        }
+        return ResponseUtil.ok();
+    }
+
 
     /**
      * 根据条件搜素消费详情
@@ -130,21 +149,17 @@ public class WxConseumeController {
 
     @GetMapping("infoList")
     @ApiOperation(value = "根据条件搜素消费详情", notes = "")
-    public Object infoList(Integer consumeLogId, Integer userId,
+    public Object infoList(SotwoConsumeInfo sotwoConsumeInfo,
                            @RequestParam(value = "page", defaultValue = "1") Integer page,
                            @RequestParam(value = "size", defaultValue = "10") Integer size,
                            String sort, String order) {
 
-
         //查询列表数据
-        List<SotwoConsumeInfo> consumeInfosList = consumeInfoService.querySelective(consumeLogId, userId, page, size, sort, order);
-        int total = consumeInfoService.countSeletive(consumeLogId, userId, page, size, sort, order);
-
+        List<SotwoConsumeInfo> consumeInfosList = consumeInfoService.querySelective(sotwoConsumeInfo, page, size, sort, order);
+        int total = consumeInfoService.countSeletive(sotwoConsumeInfo, page, size, sort, order);
         Map<String, Object> data = new HashMap<>();
         data.put("consumeLogsList", consumeInfosList);
         data.put("count", total);
         return ResponseUtil.ok(data);
     }
-
-
 }
