@@ -41,7 +41,7 @@
         <javaModelGenerator targetPackage="org.myoranges.sotwo.db.domain" targetProject="src/main/java" />
         <sqlMapGenerator targetPackage="org.myoranges.sotwo.db.dao" targetProject="src/main/resources" />
         <javaClientGenerator type="XMLMAPPER" targetPackage="org.myoranges.sotwo.db.dao" targetProject="src/main/java" />
-        <!--表名-->
+<!--        &lt;!&ndash;表名&ndash;&gt;
         <table tableName="sotwo_ad">
             <generatedKey column="id" sqlStatement="MySql" identity="true" />
             <columnOverride javaType="java.time.LocalDateTime" column="start_time"/>
@@ -170,7 +170,7 @@
             <generatedKey column="id" sqlStatement="MySql" identity="true" />
             <columnOverride javaType="java.time.LocalDateTime" column="used_time"/>
             <columnOverride javaType="java.time.LocalDateTime" column="add_time"/>
-        </table>
+        </table>-->
         <table tableName="sotwo_consume_log">
             <generatedKey column="id" sqlStatement="MySql" identity="true" />
             <columnOverride javaType="java.time.LocalDateTime" column="reg_time"/>

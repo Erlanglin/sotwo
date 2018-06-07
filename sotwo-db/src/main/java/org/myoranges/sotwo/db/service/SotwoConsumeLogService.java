@@ -24,8 +24,8 @@ public class SotwoConsumeLogService {
         return consumeLogMapper.insertSelective(consumeLog);
     }
 
-    public void update(SotwoConsumeLog consumeLog) {
-        consumeLogMapper.updateByPrimaryKeySelective(consumeLog);
+    public int update(SotwoConsumeLog consumeLog) {
+        return consumeLogMapper.updateByPrimaryKeySelective(consumeLog);
     }
 
 
@@ -42,7 +42,7 @@ public class SotwoConsumeLogService {
         return consumeLogMapper.selectByExample(example);
     }
 
-    public List<SotwoConsumeLog> querySelective( SotwoConsumeLog sotwoConsumeLog, Integer page, Integer size, String sort, String order) {
+    public List<SotwoConsumeLog> querySelective(SotwoConsumeLog sotwoConsumeLog, Integer page, Integer size, String sort, String order) {
         PageHelper.startPage(page, size);
         return consumeLogMapper.selectByExample(this.entitytoExample(sotwoConsumeLog));
     }

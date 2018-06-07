@@ -10,6 +10,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -25,10 +29,24 @@ public class SotwoConsumeInfoService {
         return consumeInfoMapper.insertSelective(consumeInfo);
     }
 
-    public void update(SotwoConsumeInfo consumeInfo) {
-        consumeInfoMapper.updateByPrimaryKeySelective(consumeInfo);
+    public int updateByPrimaryKey(SotwoConsumeInfo consumeInfo) {
+        return consumeInfoMapper.updateByPrimaryKeySelective(consumeInfo);
+    }
+    public int update(SotwoConsumeInfo consumeInfo) {
+        return consumeInfoMapper.updateByPrimaryKeySelective(consumeInfo);
     }
 
+    public int updateStatus(Integer consumeLogId, Integer userId) {
+        List<SotwoConsumeInfo> sotwoConsumeInfos = this.queryByConsumeLogIdAndUserId(consumeLogId,userId);
+        if (sotwoConsumeInfos.size() == 1){
+            for(SotwoConsumeInfo sotwoConsumeInfo : sotwoConsumeInfos){
+                sotwoConsumeInfo.setStatus(1);
+                sotwoConsumeInfo.setHandlerTime(LocalDateTime.now());
+                return this.updateByPrimaryKey(sotwoConsumeInfo);
+            }
+        }
+        return 0;
+    }
 
     public int count() {
         SotwoConsumeInfoExample example = new SotwoConsumeInfoExample();
@@ -43,8 +61,17 @@ public class SotwoConsumeInfoService {
         return consumeInfoMapper.selectByExample(example);
     }
 
-    public List<SotwoConsumeInfo> querySelective(SotwoConsumeInfo sotwoConsumeInfo, Integer page, Integer size, String sort, String order) {
-        PageHelper.startPage(page, size);
+    public List<SotwoConsumeInfo> queryByConsumeLogIdAndUserId(Integer consumeLogId, Integer userId) {
+        SotwoConsumeInfo sotwoConsumeInfo = new SotwoConsumeInfo();
+        sotwoConsumeInfo.setConsumeLogId(consumeLogId);
+        sotwoConsumeInfo.setUserId(userId);
+        return consumeInfoMapper.selectByExample(this.entitytoExample(sotwoConsumeInfo));
+    }
+
+    public List<SotwoConsumeInfo> querySelective(SotwoConsumeInfo sotwoConsumeInfo, Integer page, Integer limit, String sort, String order) {
+        return consumeInfoMapper.selectByExample(this.entitytoExample(sotwoConsumeInfo));
+    }
+    public List<SotwoConsumeInfo> querySelective(SotwoConsumeInfo sotwoConsumeInfo, String startTime, String endTime, Integer page, Integer size, String sort, String order) {
         return consumeInfoMapper.selectByExample(this.entitytoExample(sotwoConsumeInfo));
     }
 
