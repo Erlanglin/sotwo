@@ -23,14 +23,11 @@ public class UserController {
     private SotwoUserService userService;
 
     @GetMapping("/list")
-    public Object list(@LoginAdmin Integer adminId,
-                       String username, String mobile,
+    public Object list(String username, String mobile,
                        @RequestParam(value = "page", defaultValue = "1") Integer page,
                        @RequestParam(value = "limit", defaultValue = "10") Integer limit,
                        String sort, String order){
-        if(adminId == null){
-            return ResponseUtil.fail401();
-        }
+
         List<SotwoUser> userList = userService.querySelective(username, mobile, page, limit, sort, order);
         int total = userService.countSeletive(username, mobile, page, limit, sort, order);
         Map<String, Object> data = new HashMap<>();

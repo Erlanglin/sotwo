@@ -122,6 +122,21 @@ export const asyncRouterMap = [
     ]
   },
   {
+    path: '/bill',
+    component: Layout,
+    redirect: 'noredirect',
+    name: 'billManage',
+    meta: {
+      title: '账单',
+      icon: 'chart'
+    },
+    children: [
+      { path: 'bill1', component: _import('bill/bill1'), name: 'bill1', meta: { title: '记账', noCache: true }},
+      { path: 'bill', component: _import('bill/bill'), name: 'bill', meta: { title: '账单', noCache: true }}
+    ]
+  },
+
+  {
     path: '/promotion',
     component: Layout,
     redirect: 'noredirect',

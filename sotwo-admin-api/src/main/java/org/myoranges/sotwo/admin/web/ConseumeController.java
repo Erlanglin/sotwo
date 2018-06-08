@@ -1,13 +1,17 @@
-package org.myoranges.sotwo.wx.web;
+package org.myoranges.sotwo.admin.web;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.myoranges.sotwo.core.util.ResponseUtil;
-import org.myoranges.sotwo.db.domain.*;
+import org.myoranges.sotwo.db.domain.SotwoConsumeInfo;
+import org.myoranges.sotwo.db.domain.SotwoConsumeLog;
+import org.myoranges.sotwo.db.domain.SotwoUser;
 import org.myoranges.sotwo.db.model.SotwoConsumeModel;
-import org.myoranges.sotwo.db.service.*;
+import org.myoranges.sotwo.db.service.SotwoConsumeInfoService;
+import org.myoranges.sotwo.db.service.SotwoConsumeLogService;
+import org.myoranges.sotwo.db.service.SotwoUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,10 +21,10 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@Api(value = "WxConseumeController", description = "消费管理接口")
-@RequestMapping("/wx/consume")
-public class WxConseumeController {
-    private final Log logger = LogFactory.getLog(WxConseumeController.class);
+@Api(value = "ConseumeController", description = "消费管理接口")
+@RequestMapping("/consume")
+public class ConseumeController {
+    private final Log logger = LogFactory.getLog(ConseumeController.class);
 
     @Autowired
     private SotwoConsumeLogService consumeLogService;
@@ -53,32 +57,6 @@ public class WxConseumeController {
         data.put("count", total);
         return ResponseUtil.ok(data);
     }
-
-
-    /**
-     * 消费者列表（目前就是用户列表）
-     *
-     * @param page  分页页数
-     * @param limit 分页大小
-     * @param sort  排序方式
-     * @param order 排序类型，顺序或者降序
-     * @return 根据条件搜素的商品详情
-     */
-    @GetMapping("/userList")
-    @ApiOperation(value = "消费者列表（目前就是用户列表）", notes = "")
-    public Object list(
-            String username, String mobile,
-            @RequestParam(value = "page", defaultValue = "1") Integer page,
-            @RequestParam(value = "limit", defaultValue = "10") Integer limit,
-            String sort, String order) {
-        List<SotwoUser> userList = userService.querySelective(username, mobile, page, limit, sort, order);
-        int total = userService.countSeletive(username, mobile, page, limit, sort, order);
-        Map<String, Object> data = new HashMap<>();
-        data.put("total", total);
-        data.put("items", userList);
-        return ResponseUtil.ok(data);
-    }
-
 
     /**
      * 添加消费记录（记账）

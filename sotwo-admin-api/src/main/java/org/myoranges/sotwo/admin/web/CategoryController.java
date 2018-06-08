@@ -22,15 +22,11 @@ public class CategoryController {
     private SotwoCategoryService categoryService;
 
     @GetMapping("/list")
-    public Object list(@LoginAdmin Integer adminId,
+    public Object list(
                        String id, String name,
                        @RequestParam(value = "page", defaultValue = "1") Integer page,
                        @RequestParam(value = "limit", defaultValue = "10") Integer limit,
                        String sort, String order){
-        if(adminId == null){
-            return ResponseUtil.unlogin();
-        }
-
         List<SotwoCategory> collectList = categoryService.querySelective(id, name, page, limit, sort, order);
         int total = categoryService.countSelective(id, name, page, limit, sort, order);
         Map<String, Object> data = new HashMap<>();
