@@ -15,8 +15,6 @@
     <!-- 查询结果 -->
     <el-table size="small" :data="list" v-loading="listLoading" element-loading-text="正在查询中。。。" border fit highlight-current-row>
 
-
-
       <el-table-column align="center" width="100px" label="消费信息Id" prop="id" sortable>
       </el-table-column>
       

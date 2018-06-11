@@ -94,6 +94,4 @@ public class SotwoConsumeLogService {
         }
         return sotwoConsumeLogExample;
     }
-
-
 }

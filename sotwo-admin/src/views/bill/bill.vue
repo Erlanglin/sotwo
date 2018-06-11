@@ -66,38 +66,29 @@
 
     <!-- 添加或修改对话框 -->
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-form :rules="rules" ref="dataForm" :model="dataForm" status-icon label-position="left" label-width="100px" style='width: 400px; margin-left:50px;'>
+           <el-form :rules="rules" ref="dataForm" :model="dataForm" status-icon label-position="left" label-width="100px" style='width: 400px; margin-left:50px;'>
         <el-form-item label="消费主题" prop="consumeTitle">
           <el-input v-model="dataForm.consumeTitle"></el-input>
-        </el-form-item>
-        <el-form-item label="消费地点" prop="consumeAddress"
+        </el-form-item>  
+        <el-form-item label="消费地点" prop="consumeAddress">
           <el-input v-model="dataForm.consumeAddress"></el-input>
-        </el-form-item>
+        </el-form-item>  
         <el-form-item label="消费类型Id" prop="consumeCategoryId">
           <el-input v-model="dataForm.consumeCategoryId"></el-input>
-        </el-form-item>
+        </el-form-item>  
         <el-form-item label="费用" prop="price">
           <el-input v-model="dataForm.price"></el-input>
-        </el-form-item>
+        </el-form-item>  
         <el-form-item label="买单人Id" prop="payUserId">
           <el-input v-model="dataForm.payUserId"></el-input>
+        </el-form-item>
+        <el-form-item label="消费者" prop="userId">
+          <el-input v-model="dataFormDetail.userId"></el-input>
         </el-form-item>
         <el-form-item label="消费时间" prop="regTime">
           <el-date-picker v-model="dataForm.handlerTime" type="date" placeholder="选择日期" value-format="yyyy-MM-dd">
           </el-date-picker>
-        </el-form-item>
-        <el-form-item label="是否结清" prop="status">
-          <el-select v-model="dataForm.status" placeholder="请选择">
-            <el-option label="是" :value="true">
-            </el-option>
-            <el-option label="否" :value="false">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="结清时间" prop="handlerTimehandlerTime">
-          <el-date-picker v-model="dataForm.handlerTime" type="date" placeholder="选择日期" value-format="yyyy-MM-dd">
-          </el-date-picker>
-        </el-form-item>
+        </el-form-item>           
       </el-form>
       <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取消</el-button>
@@ -160,172 +151,20 @@ export default {
         regTime: undefined,
         status: false
       },
-      dialogFormVisible: false,
-      dialogStatus: '',
-      textMap: {
-        update: '编辑',
-        create: '创建'
-      },
-      rules: {
-        consumeAddress: [{ required: true, message: '消费地址不能为空', trigger: 'blur' }],
-        payUserId: [{ required: true, message: '买单人不能为空', trigger: 'blur' }]
-      },
-      downloadLoading: false
-    }
-  },
-  created() {
-    this.getList()
-  },
-  methods: {
-    getList() {
-      this.listLoading = true
-      listConsumeLog(this.listQuery).then(response => {
-        this.list = response.data.data.items
-        this.total = response.data.data.total
-        this.listLoading = false
-      }).catch(() => {
-        this.list = []
-        this.total = 0
-        this.listLoading = false
-      })
-    },
-    handleFilter() {
-      this.listQuery.page = 1
-      this.getList()
-    },
-    handleSizeChange(val) {
-      this.listQuery.limit = val
-      this.getList()
-    },
-    handleCurrentChange(val) {
-      this.listQuery.page = val
-      this.getList()
-    },
-    resetForm() {
-      this.dataForm = {
+      dataFormDetail: {
         id: undefined,
-        consumeTitle: undefined,
-        consumeAddress: undefined,
-        consumeCategoryId: undefined,
-        payUserId: undefined,
+        consumeLogId: undefined,
+        userId: undefined,
+        payStatus: false,
         price: undefined,
-        regTime: undefined,
-        status: false
-      }
-    },
-    filterLevel(value, row) {
-      return row.level === value
-    },
-    handleCreate() {
-      this.resetForm()
-      this.dialogStatus = 'create'
-      this.dialogFormVisible = true
-      this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
-      })
-    },
-    createData() {
-      this.$refs['dataForm'].validate((valid) => {
-        if (valid) {
-          createConsumeLog(this.dataForm).then(response => {
-            this.list.unshift(response.data.data)
-            this.dialogFormVisible = false
-            this.$notify({
-              title: '成功',
-              message: '创建成功',
-              type: 'success',
-              duration: 2000
-            })
-          })
-        }
-      })
-    },
-    handleUpdate(row) {
-      this.dataForm = Object.assign({}, row)
-      this.dialogStatus = 'update'
-      this.dialogFormVisible = true
-      this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
-      })
-    },
-    updateData() {
-      this.$refs['dataForm'].validate((valid) => {
-        if (valid) {
-          updateConsumeLog(this.dataForm).then(() => {
-            for (const v of this.list) {
-              if (v.id === this.dataForm.id) {
-                const index = this.list.indexOf(v)
-                this.list.splice(index, 1, this.dataForm)
-                break
-              }
-            }
-            this.dialogFormVisible = false
-            this.$notify({
-              title: '成功',
-              message: '更新成功',
-              type: 'success',
-              duration: 2000
-            })
-          })
-        }
-      })
-    },
-    handleDelete(row) {
-      deleteConsumeLog(row).then(response => {
-        this.$notify({
-          title: '成功',
-          message: '删除成功',
-          type: 'success',
-          duration: 2000
-        })
-        const index = this.list.indexOf(row)
-        this.list.splice(index, 1)
-      })
-    },
-    handleDownload() {
-      this.downloadLoading = true
-      import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['消费记录Id', '消费主题', '消费地点', '消费类型Id', '费用', '买单人Id', '消费时间', '是否结清']
-        const filterVal = ['id', 'consumeTitle', 'consumeAddress', 'consumeCategoryId', 'price', 'payUserId', 'regTime', 'status']
-        excel.export_json_to_excel2(tHeader, this.list, filterVal, '消费记录信息')
-        this.downloadLoading = false
-      })
-    }
-  }
-}
-
-
-export default {
-  name: 'ConsumeLog',
-  components: { BackToTop, Tinymce },
-  directives: { waves },
-  data() {
-    return {
-      list: undefined,
-      total: undefined,
-      listLoading: true,
-      listQuery: {
-        page: 1,
-        limit: 20,
-        consumeCategoryId: undefined,
-        payUserId: undefined,
-        sort: '+id'
-      },
-      dataForm: {
-        id: undefined,
-        consumeTitle: undefined,
-        consumeAddress: undefined,
-        consumeCategoryId: undefined,
-        payUserId: undefined,
-        price: undefined,
-        regTime: undefined,
-        status: false
+        status: false,
+        handlerTime: undefined
       },
       dialogFormVisible: false,
       dialogStatus: '',
       textMap: {
         update: '编辑',
-        create: '创建'
+        create: '记账'
       },
       rules: {
         consumeAddress: [{ required: true, message: '消费地址不能为空', trigger: 'blur' }],
