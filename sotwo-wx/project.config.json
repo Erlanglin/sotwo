@@ -102,18 +102,18 @@
 					"pathName": "pages/search/search",
 					"query": ""
 				},
-        {
+				{
 					"id": -1,
 					"name": "记账",
 					"pathName": "pages/consume/books/books",
 					"query": ""
 				},
-        {
-          "id": -1,
-          "name": "账目",
-          "pathName": "pages/consume/detail/detail",
-          "query": ""
-        },
+				{
+					"id": -1,
+					"name": "账目",
+					"pathName": "pages/consume/detail/detail",
+					"query": ""
+				},
 				{
 					"id": -1,
 					"name": "商品",

@@ -31,7 +31,7 @@ public class SwaggerConfig {
 
     private ApiInfo publicApiInfo() {
         return new ApiInfoBuilder()
-                .title("sotwo-wx-api - API文档")
+                .title("sotwo-admin-api - API文档")
                 .description("接口文档")
                 .version("1.0.0")
                 .license("sotwo")

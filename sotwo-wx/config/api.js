@@ -28,10 +28,6 @@ module.exports = {
     AuthRegister: WxApiRoot + 'auth/register', //账号注册
     AuthReset: WxApiRoot + 'auth/reset', //账号密码重置
 
-    ConsumeLogList: WxApiRoot + 'conusme/logList',  //账单记录
-    ConsumeInfoList: WxApiRoot + 'conusme/logList',  //账单详情
-
-
     GoodsCount: WxApiRoot + 'goods/count',  //统计商品总数
     GoodsList: WxApiRoot + 'goods/list',  //获得商品列表
     GoodsCategory: WxApiRoot + 'goods/category',  //获得分类数据
@@ -74,6 +70,9 @@ module.exports = {
     AddressDelete: WxApiRoot + 'address/delete',  //保存收货地址
 
     RegionList: WxApiRoot + 'region/list',  //获取区域列表
+
+    ConsumeLogList: WxApiRoot + 'consume/logList',  //账单记录
+    ConsumeInfoList: WxApiRoot + 'consume/infoList',  //账单详情
 
     OrderSubmit: WxApiRoot + 'order/submit', // 提交订单
     OrderPrepay: WxApiRoot + 'order/prepay', // 订单的预支付会话
