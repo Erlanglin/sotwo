@@ -3,21 +3,20 @@ var api = require('../../../config/api.js');
 
 Page({
   data:{
-    consumeLogList: {},
-    showType: 3
+    orderList: [],
+    showType: 0
   },
   onLoad:function(options){
     // 页面初始化 options为页面跳转所带来的参数
-    this.getConsumeList();
+    this.getOrderList();
   },
-  
-  getConsumeList(){
+  getOrderList(){
     let that = this;
-    util.request(api.ConsumeLogList, { status: that.data.showType}).then(function (res) {
+    util.request(api.OrderList, { showType: that.data.showType}).then(function (res) {
       if (res.errno === 0) {
         console.log(res.data);
         that.setData({
-          consumeLogList: res.data.data
+          orderList: res.data.data
         });
       }
     });
@@ -27,7 +26,7 @@ Page({
     this.setData({
       showType: showType
     });
-    this.getConsumeList();
+    this.getOrderList();
   },
   onReady:function(){
     // 页面渲染完成

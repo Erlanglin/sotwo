@@ -39,6 +39,14 @@ Page({
       wx.navigateTo({ url: "/pages/auth/login/login" });
     }
   },
+  goBill() {
+    if (app.globalData.hasLogin) {
+      wx.navigateTo({ url: "/pages/ucenter/bill/bill" });
+    }
+    else {
+      wx.navigateTo({ url: "/pages/auth/login/login" });
+    }
+  },
   goOrder() {
     if (app.globalData.hasLogin) {
       wx.navigateTo({ url: "/pages/ucenter/order/order" });

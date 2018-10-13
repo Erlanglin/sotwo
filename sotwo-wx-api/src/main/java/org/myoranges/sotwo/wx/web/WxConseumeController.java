@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,12 +50,24 @@ public class WxConseumeController {
                           @RequestParam(value = "size", defaultValue = "10") Integer size,
                           String sort, String order) {
         //查询列表数据
+        List<SotwoConsumeInfo> consumeInfos = null;
         if (sotwoConsumeLog.getStatus() == 3)
             sotwoConsumeLog.setStatus(null);
+
+        List<Map<String, Object>> consumeLogLists = new ArrayList<>();
         List<SotwoConsumeLog> consumeLogsList = consumeLogService.querySelective(sotwoConsumeLog, page, size, sort, order);
+        for(SotwoConsumeLog consumeLog: consumeLogsList){
+            Map<String, Object> consumeLogList = new HashMap<>();
+            consumeInfos  = consumeInfoService.queryByConsumeLogId(consumeLog.getId());
+            consumeLogList.put("consumeLog", consumeLog);
+            consumeLogList.put("consumeInfo",consumeInfos);
+            consumeLogList.put("billStatus",ConsumeUtil.billStatusText(consumeLog.getStatus()));
+            consumeLogList.put("payStatus",ConsumeUtil.payStatusText(consumeInfos.get));
+            consumeLogLists.add(consumeLogList);
+        }
         int total = consumeLogService.countSeletive(sotwoConsumeLog, page, size, sort, order);
         Map<String, Object> data = new HashMap<>();
-        data.put("consumeLogsList", consumeLogsList);
+        data.put("consumeLogList", consumeLogLists);
         data.put("count", total);
         return ResponseUtil.ok(data);
     }
