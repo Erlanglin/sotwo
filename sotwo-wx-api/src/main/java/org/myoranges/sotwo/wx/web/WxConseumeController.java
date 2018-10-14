@@ -5,8 +5,11 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.myoranges.sotwo.core.util.ResponseUtil;
+import org.myoranges.sotwo.db.bo.BillBo;
+import org.myoranges.sotwo.db.bo.ConsumeInfoAndStatus;
 import org.myoranges.sotwo.db.domain.SotwoConsumeInfo;
 import org.myoranges.sotwo.db.domain.SotwoConsumeLog;
+import org.myoranges.sotwo.db.domain.SotwoUser;
 import org.myoranges.sotwo.db.model.SotwoConsumeModel;
 import org.myoranges.sotwo.db.service.SotwoConsumeInfoService;
 import org.myoranges.sotwo.db.service.SotwoConsumeLogService;
@@ -56,18 +59,24 @@ public class WxConseumeController {
 
         List<Map<String, Object>> consumeLogLists = new ArrayList<>();
         List<SotwoConsumeLog> consumeLogsList = consumeLogService.querySelective(sotwoConsumeLog, page, size, sort, order);
-        for(SotwoConsumeLog consumeLog: consumeLogsList){
-            Map<String, Object> consumeLogList = new HashMap<>();
-            consumeInfos  = consumeInfoService.queryByConsumeLogId(consumeLog.getId());
-            consumeLogList.put("consumeLog", consumeLog);
-            consumeLogList.put("consumeInfo",consumeInfos);
-            consumeLogList.put("billStatus",ConsumeUtil.billStatusText(consumeLog.getStatus()));
-            consumeLogList.put("payStatus",ConsumeUtil.payStatusText(consumeInfos.get));
-            consumeLogLists.add(consumeLogList);
+        List<BillBo> billList = new ArrayList<>();
+        for (SotwoConsumeLog consumeLog : consumeLogsList) {
+            BillBo bill = new BillBo();
+            consumeInfos = consumeInfoService.queryByConsumeLogId(consumeLog.getId());
+            List<ConsumeInfoAndStatus> consumeInfoAndStatusList = new ArrayList<>();
+            for(SotwoConsumeInfo sotwoConsumeInfo: consumeInfos){
+                SotwoUser user = userService.findById(sotwoConsumeInfo.getUserId());
+                ConsumeInfoAndStatus consumeInfoAndStatus = new ConsumeInfoAndStatus(sotwoConsumeInfo,user.getUsername(),ConsumeUtil.payStatusText(sotwoConsumeInfo.getStatus()));
+                consumeInfoAndStatusList.add(consumeInfoAndStatus);
+            }
+            bill.setSotwoConsumeLog(consumeLog);
+            bill.setBillStatus(ConsumeUtil.billStatusText(consumeLog.getStatus()));
+            bill.setSotwoConsumeInfoAndStatus(consumeInfoAndStatusList);
+            billList.add(bill);
         }
         int total = consumeLogService.countSeletive(sotwoConsumeLog, page, size, sort, order);
         Map<String, Object> data = new HashMap<>();
-        data.put("consumeLogList", consumeLogLists);
+        data.put("billList", billList);
         data.put("count", total);
         return ResponseUtil.ok(data);
     }

@@ -71,8 +71,8 @@ module.exports = {
 
     RegionList: WxApiRoot + 'region/list',  //获取区域列表
 
-    ConsumeLogList: WxApiRoot + 'consume/logList',  //账单记录
-    ConsumeInfoList: WxApiRoot + 'consume/infoList',  //账单详情
+    BillList: WxApiRoot + 'consume/logList',  //账单记录
+    BillDetail: WxApiRoot + 'consume/infoList',  //账单详情
 
     OrderSubmit: WxApiRoot + 'order/submit', // 提交订单
     OrderPrepay: WxApiRoot + 'order/prepay', // 订单的预支付会话

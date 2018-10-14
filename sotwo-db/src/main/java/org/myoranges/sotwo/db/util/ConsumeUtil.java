@@ -72,48 +72,6 @@ public class ConsumeUtil {
         throw new IllegalStateException("orderStatus不支持");
     }
 
-
-    public static OrderHandleOption build(SotwoOrder order){
-        int status = order.getOrderStatus().intValue();
-        OrderHandleOption handleOption = new OrderHandleOption();
-
-        if (status == 101) {
-            // 如果订单没有被取消，且没有支付，则可支付，可取消
-            handleOption.setCancel(true);
-            handleOption.setPay(true);
-        }
-        else if (status == 102 || status == 103) {
-            // 如果订单已经取消或是已完成，则可删除
-            handleOption.setDelete(true);
-            handleOption.setRebuy(true);
-        }
-        else if (status == 201) {
-            // 如果订单已付款，没有发货，则可退款操作
-            handleOption.setRefund(true);
-        }
-        else if (status == 202) {
-            // 如果订单已经取消或是已完成，则可删除
-            handleOption.setDelete(true);
-            handleOption.setRebuy(true);
-        }
-        else if (status == 301) {
-            // 如果订单已经发货，没有收货，则可收货操作,
-            // 此时不能取消订单
-            handleOption.setConfirm(true);
-        }
-        else if (status ==  401 || status == 402) {
-            // 如果订单已经支付，且已经收货，则可完成交易、评论和再次购买
-            handleOption.setDelete(true);
-            handleOption.setComment(true);
-            handleOption.setRebuy(true);
-        }
-        else {
-            throw new IllegalStateException("status不支持");
-        }
-
-        return handleOption;
-    }
-
     public static Integer consumeStatus(Integer showType){
         // 全部订单
         if (showType == -1) {
@@ -140,4 +98,23 @@ public class ConsumeUtil {
     public static boolean isShipStatus(SotwoOrder SotwoOrder) {
         return ConsumeUtil.STATUS_SHIP == SotwoOrder.getOrderStatus().shortValue();
     }
+
+    public static String billStatusText(Integer status) {
+        if(status == 0)
+            return "未结算";
+        else if(status == 1)
+            return "已结算";
+        else
+            return "不明状态";
+    }
+
+    public static String payStatusText(Integer status) {
+        if(status == 0)
+            return "未付款";
+        else if(status == 1)
+            return "已付款";
+        else
+            return "不明状态";
+    }
+
 }
