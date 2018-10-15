@@ -1,0 +1,16 @@
+<view class="container">
+    <view class="orders-switch">
+        <view class="item {{ showType == 3 ? 'active' : ''}}" bindtap="switchTab" data-index='3'><view class="txt">全部</view>
+        </view>
+        <view class="item {{ showType == 0 ? 'active' : ''}}" bindtap="switchTab" data-index='0'>
+            <view class="txt">待结算</view>
+        </view>
+        <view class="item {{ showType == 1 ? 'active' : ''}}" bindtap="switchTab" data-index='1'>
+            <view class="txt">已结算</view>
+        </view>
+        <view class="item {{ showType == 2 ? 'active' : ''}}" bindtap="switchTab" data-index='2'>
+            <view class="txt">待评价</view>
+        </view>
+    </view>
+    
+</view>
