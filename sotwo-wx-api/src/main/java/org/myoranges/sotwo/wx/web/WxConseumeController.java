@@ -93,8 +93,7 @@ public class WxConseumeController {
         int addNum = consumeLogService.add(sotwoConsumeModel.getConsumeLog());
         for (SotwoConsumeInfo consumeInfo : sotwoConsumeModel.getSotwoConsumeInfos()) {
             consumeInfo.setConsumeLogId(sotwoConsumeModel.getConsumeLog().getId());
-            if (consumeInfo.getPrice() > 0) {
-                consumeInfo.setPayStatus(1);
+            if (consumeInfo.getPayStatus() == 1) {
                 consumeInfo.setStatus(1);
                 consumeInfo.setHandlerTime(LocalDateTime.now());
             }
